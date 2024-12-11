@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Box, Heading, Text, Button, Stack, Flex, Spacer } from '@chakra-ui/react';
 
 import AddMemberForm from './AddMemberForm';
+import TopupForm from './TopupForm';
 
 const FamilyBlock = ({currentUser, family}) => {
   const {parents, children} = family;
   const isParent = currentUser.role === 'parent';
 
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
+  const [isTopupOpen, setTopupOpen] = useState(false);
+  const [selectedChildId, setSelectedChildId] = useState(null);
 
   if (!isParent) return null;
 
@@ -15,12 +18,18 @@ const FamilyBlock = ({currentUser, family}) => {
     setAddMemberOpen(true);
   };
 
+  const handleTopUpClick = (childId) => {
+    setSelectedChildId(childId);
+    setTopupOpen(true);
+  };
+
   const handleAddMemberSubmit = ({ name, email, role }) => {
     console.log(`Добавить члена семьи: ${name} ${email} (${role})`);
   };
 
-  const handleTopUp = (childId) => {
-    console.log(`Пополнить баланс ребенку с id ${childId}`);
+  const handleTopUpSubmit = ({ amount, reason }) => {
+    console.log(`Пополнить баланс ребенку с id ${selectedChildId} на сумму ${amount}, причина: ${reason}`);
+    setSelectedChildId(null);
   };
 
   return (
@@ -70,7 +79,7 @@ const FamilyBlock = ({currentUser, family}) => {
                     bg="teal.500" 
                     color="white"
                     _hover={{ bg: "teal.600" }} 
-                    onClick={() => handleTopUp(child.id)}
+                    onClick={() => handleTopUpClick(child.id)}
                   >
                     +
                   </Button>
@@ -97,6 +106,11 @@ const FamilyBlock = ({currentUser, family}) => {
           isOpen={isAddMemberOpen} 
           onClose={() => setAddMemberOpen(false)} 
           onSubmit={handleAddMemberSubmit}
+        />
+        <TopupForm 
+          isOpen={isTopupOpen}
+          onClose={() => setTopupOpen(false)}
+          onSubmit={handleTopUpSubmit}
         />
       </Flex>
     </Box>
