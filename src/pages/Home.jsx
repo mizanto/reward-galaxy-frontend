@@ -10,11 +10,12 @@ const Home = () => {
       templateColumns={{ base: "1fr", sm: "1fr 3fr" }}
       gap={4}
       w="100%"
+      h="100%"
     >
-      <GridItem>
+      <GridItem overflow="auto">
         <FamilyBlock />
       </GridItem>
-      <GridItem>
+      <GridItem overflow="auto">
         <GoalsBlock />
       </GridItem>
   </Grid>

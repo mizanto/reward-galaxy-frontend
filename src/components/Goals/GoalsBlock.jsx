@@ -1,5 +1,7 @@
 import React from "react";
-import { Box, Button, SimpleGrid, Text, Image, Flex, Spacer, Heading } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid, Flex, Spacer, Heading } from "@chakra-ui/react";
+
+import GoalCard from "./GoalCard";
 
 const goals = [
     {
@@ -65,21 +67,21 @@ const GoalsBlock = () => {
       h="100%"
       overflow="auto"
     >
-      {userRole === "parent" && (
-        <Flex>
-          <Heading size="2xl" mb={4}>Цели</Heading>
-          <Spacer />
-          <Button 
-            bg="teal.500" 
-            color="white"
-            _hover={{ bg: "teal.600" }}
-            mb="4" 
-            onClick={onAddGoal}
-          >
-            Добавить цель
-          </Button>
-        </Flex>
-      )}
+      <Flex>
+        <Heading size="2xl" mb={4}>Цели</Heading>
+        <Spacer/>
+        {userRole === "parent" && (
+            <Button 
+              bg="teal.500" 
+              color="white"
+              _hover={{ bg: "teal.600" }}
+              mb="4" 
+              onClick={onAddGoal}
+            >
+              Добавить цель
+            </Button>
+        )}
+      </Flex>
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 6 }} gap="20px">
         {goals.map((goal) => (
           <GoalCard
@@ -91,60 +93,6 @@ const GoalsBlock = () => {
           />
         ))}
       </SimpleGrid>
-    </Box>
-  );
-};
-
-const GoalCard = ({ goal, userRole, onDeleteGoal, onPurchaseGoal }) => {
-  return (
-    <Box
-      borderWidth="1px"
-      borderRadius="lg"
-      overflow="hidden"
-      shadow="md"
-      p="4"
-      bg="white"
-      display="flex"
-      flexDirection="column"
-      justifyContent="space-between"
-      alignContent="center"
-      height="100%"
-      minW={150}
-    >
-      <Image src={goal.image} alt={goal.title} borderRadius="md" mb="4" />
-      <Text fontWeight="bold" fontSize="lg" mb="2">
-        {goal.title}
-      </Text>
-      <Spacer />
-      <Text color="gray.600" mb="4">
-        Цена: {goal.price} ⭐️
-      </Text>
-      <Flex mt="auto">
-        {userRole === "parent" && (
-          <Button
-            size="sm"
-            width="100%"
-            bg="red.500"
-            color="white" 
-            _hover={{ bg: "red.600" }}
-            onClick={() => onDeleteGoal(goal.id)}
-          >
-            Удалить
-          </Button>
-        )}
-        {userRole === "child" && (
-          <Button
-            size="sm"
-            width="100%"
-            bg="teal.500"
-            color="white" 
-            _hover={{ bg: "teal.600" }}
-            onClick={() => onPurchaseGoal(goal.id)}
-          >
-            Купить
-          </Button>
-        )}
-      </Flex>
     </Box>
   );
 };

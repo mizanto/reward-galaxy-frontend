@@ -49,7 +49,7 @@ const FamilyBlock = () => {
 
       {/* Parents */}
       <Box mb={4}>
-        <Heading size="lg" mb={2}>Родители:</Heading>
+        <Heading size="lg" mb={2}>Родители</Heading>
         <Stack spacing={2}>
           {familyData.parents.map(parent => (
             <Flex key={parent.id} align="center">
@@ -63,7 +63,7 @@ const FamilyBlock = () => {
 
       {/* Childred */}
       <Box mb={4}>
-        <Heading size="lg" mb={2}>Дети:</Heading>
+        <Heading size="lg" mb={2}>Дети</Heading>
         <Stack spacing={2}>
           {familyData.children.map(child => (
               <Flex key={child.id} align="center">
