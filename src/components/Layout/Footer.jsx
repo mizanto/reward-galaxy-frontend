@@ -3,7 +3,7 @@ import { Box, Text, Link as ChakraLink } from '@chakra-ui/react';
 
 const Footer = () => {
   return (
-    <Box as="footer" bg="gray.100" p={4} mt={8}>
+    <Box as="footer" bg="gray.100" p={4}>
       <Text fontSize="sm" color="gray.600" textAlign="center">
         © {new Date().getFullYear()} Reward Galaxy. All rights reserved. 
         {/* TODO: add privacy policy */}

@@ -1,17 +1,19 @@
 import React from 'react';
-import { Box } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import Header from './Header';
 import Footer from './Footer';
 
 const Layout = ({ children }) => {
   return (
-    <Box display="flex" flexDirection="column" minHeight="100vh">
+    <Flex direction="column" h="100vh">
       <Header />
-      <Box flex="1" p={4}>
+
+      <Flex as="main" flex="1" p={4} overflowY="auto">
         {children}
-      </Box>
+      </Flex>
+
       <Footer />
-    </Box>
+    </Flex>
   );
 };
 

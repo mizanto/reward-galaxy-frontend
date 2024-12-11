@@ -12,25 +12,32 @@ const Header = () => {
   };
 
   return (
-    <Box as="header" bg="teal.500" p={4} color="white">
-      <Flex alignItems="center">
-        <ChakraLink as={Link} to="/" fontSize="lg" fontWeight="bold">
-          Reward Galaxy
-        </ChakraLink>
-        <Spacer />
-        
-        <Flex gap={4}>
-          {!isAuthenticated ? (
-            <>
-              <ChakraLink as={Link} to="/login">Login</ChakraLink>
-              <ChakraLink as={Link} to="/register">Register</ChakraLink>
-            </>
-          ) : (
-            <Button onClick={handleLogout}>Logout</Button>
-          )}
-        </Flex>
+  <Box as="header" bg="teal.500" p={4} color="white">
+    <Flex alignItems="center">
+      <ChakraLink as={Link} to="/" fontSize="lg" fontWeight="bold">
+        Reward Galaxy
+      </ChakraLink>
+      <Spacer />
+      
+      <Flex gap={4}>
+        {!isAuthenticated ? (
+          <>
+            <ChakraLink as={Link} to="/login">Login</ChakraLink>
+            <ChakraLink as={Link} to="/register">Register</ChakraLink>
+          </>
+        ) : (
+          <Button 
+            onClick={handleLogout}
+            bg="teal.500" 
+            color="white"
+            _hover={{ bg: "teal.600" }}
+          >
+              Logout
+          </Button>
+        )}
       </Flex>
-    </Box>
+    </Flex>
+  </Box>
   );
 };
 
