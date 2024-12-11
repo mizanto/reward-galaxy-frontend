@@ -9,7 +9,8 @@ import GoalsBlock from '../components/Goals/GoalsBlock';
 const currentUser = {
   id: 1,
   role: 'parent', // 'parent' или 'child'
-  name: 'Иван'
+  name: 'Иван',
+  balance: 5
 };
 
 const familyData = {

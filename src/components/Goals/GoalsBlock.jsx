@@ -31,16 +31,18 @@ const GoalsBlock = ({currentUser, goals}) => {
       <Flex>
         <Heading size="2xl" mb={4}>Цели</Heading>
         <Spacer/>
-        {isParent && (
-            <Button 
-              bg="teal.500" 
-              color="white"
-              _hover={{ bg: "teal.600" }}
-              mb="4" 
-              onClick={onAddGoal}
-            >
-              Добавить цель
-            </Button>
+        {isParent ? (
+          <Button 
+            bg="teal.500" 
+            color="white"
+            _hover={{ bg: "teal.600" }}
+            mb="4" 
+            onClick={onAddGoal}
+          >
+            Добавить цель
+          </Button>
+        ) : (
+          <Heading size="xl" mb={4}>Баланс: {currentUser.balance} ⭐️</Heading>
         )}
       </Flex>
       <SimpleGrid columns={{ base: 1, md: 3, lg: 4, xl: 6 }} gap="20px">
