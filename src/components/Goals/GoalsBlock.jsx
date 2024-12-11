@@ -43,7 +43,7 @@ const GoalsBlock = ({currentUser, goals}) => {
             </Button>
         )}
       </Flex>
-      <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 6 }} gap="20px">
+      <SimpleGrid columns={{ base: 1, md: 3, lg: 4, xl: 6 }} gap="20px">
         {goals.map((goal) => (
           <GoalCard
             key={goal.id}

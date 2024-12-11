@@ -26,6 +26,7 @@ const FamilyBlock = ({currentUser, family}) => {
       flexDirection="column"
       h="100%"
       overflow="auto"
+      minW={60}
     >
       <Heading size="2xl" mb={4}>Семья</Heading>
 

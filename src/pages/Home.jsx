@@ -8,7 +8,7 @@ import GoalsBlock from '../components/Goals/GoalsBlock';
 
 const currentUser = {
   id: 1,
-  role: 'child', // 'parent' или 'child'
+  role: 'parent', // 'parent' или 'child'
   name: 'Иван'
 };
 
@@ -65,7 +65,7 @@ const goals = [
 const Home = () => {
   return currentUser.role === "parent" ? (
     <Grid 
-      templateColumns={{ base: "1fr", sm: "1fr 3fr" }}
+      templateColumns={{ base: "1fr", sm: "1fr 1fr", md: "1fr 2fr", lg: "1fr 3fr"}}
       gap={4}
       w="100%"
       h="100%"
