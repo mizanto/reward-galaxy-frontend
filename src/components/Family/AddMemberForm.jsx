@@ -16,10 +16,11 @@ import {
 
 const AddMemberForm = ({ isOpen, onClose, onSubmit }) => {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [role, setRole] = useState('child'); // по умолчанию child
 
   const handleSubmit = () => {
-    onSubmit({ name, role });
+    onSubmit({ name, email, role });
     setName('');
     setRole('child');
     onClose();
@@ -38,6 +39,15 @@ const AddMemberForm = ({ isOpen, onClose, onSubmit }) => {
               value={name} 
               onChange={(e) => setName(e.target.value)} 
               placeholder="Введите имя" 
+            />
+          </FormControl>
+
+          <FormControl mb={4}>
+          <FormLabel>Email</FormLabel>
+            <Input 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              placeholder="Введите e-mail" 
             />
           </FormControl>
 

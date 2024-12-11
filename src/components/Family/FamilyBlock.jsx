@@ -15,8 +15,8 @@ const FamilyBlock = ({currentUser, family}) => {
     setAddMemberOpen(true);
   };
 
-  const handleAddMemberSubmit = ({ name, role }) => {
-    console.log(`Добавить члена семьи: ${name} (${role})`);
+  const handleAddMemberSubmit = ({ name, email, role }) => {
+    console.log(`Добавить члена семьи: ${name} ${email} (${role})`);
   };
 
   const handleTopUp = (childId) => {
