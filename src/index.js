@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { ChakraProvider } from '@chakra-ui/react';
-import { system } from "@chakra-ui/react/preset";
 
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
@@ -11,7 +10,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ChakraProvider value={system}>
+      <ChakraProvider>
         <App />
       </ChakraProvider>
     </Provider>

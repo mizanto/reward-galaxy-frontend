@@ -1,14 +1,22 @@
-import React from 'react';
-import { Box, Heading, Text, Button, Stack, Flex, Spacer, Span } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { Box, Heading, Text, Button, Stack, Flex, Spacer } from '@chakra-ui/react';
+
+import AddMemberForm from './AddMemberForm';
 
 const FamilyBlock = ({currentUser, family}) => {
   const {parents, children} = family;
   const isParent = currentUser.role === 'parent';
 
+  const [isAddMemberOpen, setAddMemberOpen] = useState(false);
+
   if (!isParent) return null;
 
-  const handleAddMember = () => {
-    console.log('Открыть форму для добавления члена семьи');
+  const handleAddMemberClick = () => {
+    setAddMemberOpen(true);
+  };
+
+  const handleAddMemberSubmit = ({ name, role }) => {
+    console.log(`Добавить члена семьи: ${name} (${role})`);
   };
 
   const handleTopUp = (childId) => {
@@ -73,7 +81,7 @@ const FamilyBlock = ({currentUser, family}) => {
         </Stack>
       </Box>
 
-      <Span />
+      <Spacer />
 
       <Flex mt="auto">
         <Button 
@@ -81,10 +89,15 @@ const FamilyBlock = ({currentUser, family}) => {
           color="white"
           _hover={{ bg: "teal.600" }} 
           width="100%" 
-          onClick={handleAddMember}
+          onClick={handleAddMemberClick}
         >
           Добавить члена семьи
         </Button>
+        <AddMemberForm 
+          isOpen={isAddMemberOpen} 
+          onClose={() => setAddMemberOpen(false)} 
+          onSubmit={handleAddMemberSubmit}
+        />
       </Flex>
     </Box>
   );
