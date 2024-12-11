@@ -1,26 +1,8 @@
 import React from 'react';
 import { Box, Heading, Text, Button, Stack, Flex, Spacer, Span } from '@chakra-ui/react';
 
-// Mock data 
-
-const currentUser = {
-  id: 1,
-  role: 'parent', // 'parent' или 'child'
-  name: 'Иван'
-};
-
-const familyData = {
-  parents: [
-    { id: 1, name: 'Иван', role: 'parent' },
-    { id: 2, name: 'Мария', role: 'parent' }
-  ],
-  children: [
-    { id: 3, name: 'Дима', role: 'child', balance: 10 },
-    { id: 4, name: 'Аня', role: 'child', balance: 5 }
-  ]
-};
-
-const FamilyBlock = () => {
+const FamilyBlock = ({currentUser, family}) => {
+  const {parents, children} = family;
   const isParent = currentUser.role === 'parent';
 
   if (!isParent) return null;
@@ -51,7 +33,7 @@ const FamilyBlock = () => {
       <Box mb={4}>
         <Heading size="lg" mb={2}>Родители</Heading>
         <Stack spacing={2}>
-          {familyData.parents.map(parent => (
+          {parents.map(parent => (
             <Flex key={parent.id} align="center">
               <Text>
                 {parent.name} {parent.id === currentUser.id && '(вы)'}
@@ -65,7 +47,7 @@ const FamilyBlock = () => {
       <Box mb={4}>
         <Heading size="lg" mb={2}>Дети</Heading>
         <Stack spacing={2}>
-          {familyData.children.map(child => (
+          {children.map(child => (
               <Flex key={child.id} align="center">
                 <Box>
                   <Text>{child.name}</Text>

@@ -3,47 +3,8 @@ import { Box, Button, SimpleGrid, Flex, Spacer, Heading } from "@chakra-ui/react
 
 import GoalCard from "./GoalCard";
 
-const goals = [
-    {
-      id: 1,
-      title: "Игрушечная машинка",
-      price: 50,
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Книга",
-      price: 30,
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 3,
-      title: "Набор для рисования",
-      price: 70,
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 1,
-      title: "Игрушечная машинка",
-      price: 50,
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 2,
-      title: "Книга",
-      price: 30,
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      id: 3,
-      title: "Набор для рисования",
-      price: 70,
-      image: "https://via.placeholder.com/150",
-    },
-  ];
-
-const GoalsBlock = () => {
-  const userRole = "parent";
+const GoalsBlock = ({currentUser, goals}) => {
+  const isParent = currentUser.role === 'parent';
 
   const onAddGoal = () => {
     console.log("Add goal")
@@ -70,7 +31,7 @@ const GoalsBlock = () => {
       <Flex>
         <Heading size="2xl" mb={4}>Цели</Heading>
         <Spacer/>
-        {userRole === "parent" && (
+        {isParent && (
             <Button 
               bg="teal.500" 
               color="white"
@@ -87,7 +48,7 @@ const GoalsBlock = () => {
           <GoalCard
             key={goal.id}
             goal={goal}
-            userRole={userRole}
+            userRole={currentUser.role}
             onDeleteGoal={onDeleteGoal}
             onPurchaseGoal={onPurchaseGoal}
           />
