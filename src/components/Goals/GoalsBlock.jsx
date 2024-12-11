@@ -36,7 +36,7 @@ const GoalsBlock = ({currentUser, goals}) => {
       overflow="auto"
     >
       <Flex>
-        <Heading size="2xl" mb={4}>Цели</Heading>
+        <Heading size="xl" mb={4}>Цели</Heading>
         <Spacer/>
         {isParent ? (
           <Button 

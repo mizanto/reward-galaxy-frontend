@@ -45,11 +45,11 @@ const FamilyBlock = ({currentUser, family}) => {
       overflow="auto"
       minW={60}
     >
-      <Heading size="2xl" mb={4}>Семья</Heading>
+      <Heading size="xl" mb={4}>Семья</Heading>
 
       {/* Parents */}
       <Box mb={4}>
-        <Heading size="lg" mb={2}>Родители</Heading>
+        <Heading size="md" mb={2}>Родители</Heading>
         <Stack spacing={2}>
           {parents.map(parent => (
             <Flex key={parent.id} align="center">
@@ -63,7 +63,7 @@ const FamilyBlock = ({currentUser, family}) => {
 
       {/* Childred */}
       <Box mb={4}>
-        <Heading size="lg" mb={2}>Дети</Heading>
+        <Heading size="md" mb={2}>Дети</Heading>
         <Stack spacing={2}>
           {children.map(child => (
               <Flex key={child.id} align="center">
