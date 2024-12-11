@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, SimpleGrid, Flex, Spacer, Heading } from "@chakra-ui/react";
 
 import GoalCard from "./GoalCard";
+import AddGoalForm from "./AddGoalForm";
 
 const GoalsBlock = ({currentUser, goals}) => {
   const isParent = currentUser.role === 'parent';
 
-  const onAddGoal = () => {
-    console.log("Add goal")
+  const [isAddGoalOpen, setAddGoalOpen] = useState(false);
+
+  const onAddGoalClick = () => {
+    setAddGoalOpen(true);
+  };
+
+  const onAddGoalSubmit = ({ title, price, image }) => {
+    console.log(`Добавить цель: ${title} ${price} ${image}`)
   };
 
   const onDeleteGoal = (goalId) => {
@@ -37,7 +44,7 @@ const GoalsBlock = ({currentUser, goals}) => {
             color="white"
             _hover={{ bg: "teal.600" }}
             mb="4" 
-            onClick={onAddGoal}
+            onClick={onAddGoalClick}
           >
             Добавить цель
           </Button>
@@ -56,6 +63,12 @@ const GoalsBlock = ({currentUser, goals}) => {
           />
         ))}
       </SimpleGrid>
+
+      <AddGoalForm 
+        isOpen={isAddGoalOpen} 
+        onClose={() => setAddGoalOpen(false)} 
+        onSubmit={onAddGoalSubmit}
+      />
     </Box>
   );
 };
