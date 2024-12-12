@@ -55,6 +55,7 @@ const GoalsBlock = ({currentUser, goals}) => {
       <SimpleGrid columns={{ base: 1, md: 3, lg: 4, xl: 6 }} gap="20px">
         {goals.map((goal) => (
           <GoalCard
+            balance={currentUser.balance}
             key={goal.id}
             goal={goal}
             userRole={currentUser.role}

@@ -1,7 +1,26 @@
 import React from "react";
-import { Box, Button, Text, Image, Flex, Spacer } from "@chakra-ui/react";
+import { Box, Button, Text, Image, Flex, Spacer, Progress } from "@chakra-ui/react";
 
-const GoalCard = ({ goal, userRole, onDeleteGoal, onPurchaseGoal }) => {
+const GoalCard = ({ balance, goal, userRole, onDeleteGoal, onPurchaseGoal }) => {
+  let buttonTitle;
+  if (userRole === "parent") {
+    buttonTitle = "Удалить";
+  } else {
+    buttonTitle = balance < goal.price ? `Не хватает ${goal.price - balance} ⭐️` : "Купить";
+  }
+
+  const progress = (balance / goal.price) * 100;
+  let progressColor;
+  if (progress < 30) {
+    progressColor = "red";
+  } else if (progress < 50) {
+    progressColor = "yellow";
+  } else if (progress < 70) {
+    progressColor = "green";
+  } else { 
+    progressColor = "teal";
+  }
+
   return (
     <Box
       borderWidth="1px"
@@ -25,29 +44,35 @@ const GoalCard = ({ goal, userRole, onDeleteGoal, onPurchaseGoal }) => {
       <Text color="gray.600" mb="4">
         Цена: {goal.price} ⭐️
       </Text>
+
+      {userRole === "child" && (
+        <Progress mb="4" size="sm" colorScheme={progressColor} value={progress} />
+      )}
+      
       <Flex mt="auto">
         {userRole === "parent" && (
           <Button
-            size="sm"
+            size="md"
             width="100%"
             bg="red.500"
             color="white" 
             _hover={{ bg: "red.600" }}
             onClick={() => onDeleteGoal(goal.id)}
           >
-            Удалить
+            {buttonTitle}
           </Button>
         )}
         {userRole === "child" && (
           <Button
-            size="sm"
+            size="md"
             width="100%"
             bg="teal.500"
             color="white" 
             _hover={{ bg: "teal.600" }}
+            isDisabled={balance < goal.price}
             onClick={() => onPurchaseGoal(goal.id)}
           >
-            Купить
+            {buttonTitle}
           </Button>
         )}
       </Flex>
