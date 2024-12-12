@@ -30,7 +30,7 @@ const Header = () => {
             onClick={handleLogout}
             bg="teal.500" 
             color="white"
-            _hover={{ bg: "teal.600" }}
+            _hover={{ bg: "white", color: "red.500" }}
           >
               Logout
           </Button>

@@ -48,15 +48,13 @@ const GoalCard = ({ balance, goal, userRole, onDeleteGoal, onPurchaseGoal }) => 
       {userRole === "child" && (
         <Progress mb="4" size="sm" colorScheme={progressColor} value={progress} />
       )}
-      
+
       <Flex mt="auto">
         {userRole === "parent" && (
           <Button
             size="md"
             width="100%"
-            bg="red.500"
-            color="white" 
-            _hover={{ bg: "red.600" }}
+            colorScheme='red'
             onClick={() => onDeleteGoal(goal.id)}
           >
             {buttonTitle}
@@ -66,9 +64,7 @@ const GoalCard = ({ balance, goal, userRole, onDeleteGoal, onPurchaseGoal }) => 
           <Button
             size="md"
             width="100%"
-            bg="teal.500"
-            color="white" 
-            _hover={{ bg: "teal.600" }}
+            colorScheme='teal'
             isDisabled={balance < goal.price}
             onClick={() => onPurchaseGoal(goal.id)}
           >

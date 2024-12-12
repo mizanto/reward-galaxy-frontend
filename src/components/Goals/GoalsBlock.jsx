@@ -48,9 +48,7 @@ const GoalsBlock = () => {
         <Spacer/>
         {isParent ? (
           <Button 
-            bg="teal.500" 
-            color="white"
-            _hover={{ bg: "teal.600" }}
+            colorScheme='teal'
             mb="4" 
             onClick={onAddGoalClick}
           >

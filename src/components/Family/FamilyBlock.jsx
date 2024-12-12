@@ -4,18 +4,20 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import AddMemberForm from './AddMemberForm';
 import TopupForm from './TopupForm';
-import { addMember, topUpChildBalance } from '../../redux/familySlice';
+import YesNoAlert from '../Common/YesNoAlert';
+import { addMember, removeMember, topUpChildBalance } from '../../redux/familySlice';
 
 const FamilyBlock = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.user);
-  console.log('Current User:', currentUser);
-  const { parents, children } = useSelector((state) => state.family);
+  const members = useSelector((state) => state.family.members);
   const isParent = currentUser.role === 'parent';
 
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
+  const [isRemoveMemberOpen, setRemoveMemberOpen] = useState(false);
   const [isTopupOpen, setTopupOpen] = useState(false);
-  const [selectedChildId, setSelectedChildId] = useState(null);
+  const [childIdToTopUp, setChildIdToTopUp] = useState(null);
+  const [memberToRemove, setMemberToRemove] = useState(null);
 
   if (!isParent) return null;
 
@@ -24,8 +26,19 @@ const FamilyBlock = () => {
   };
 
   const handleTopUpClick = (childId) => {
-    setSelectedChildId(childId);
+    setChildIdToTopUp(childId);
     setTopupOpen(true);
+  };
+
+  const handleRemoveMemberClick = (member) => {
+    setMemberToRemove(member);
+    setRemoveMemberOpen(true);
+  };
+
+  const handleRemoveMemberSubmit = () => {
+    console.log(`Удалить члена семьи с id ${memberToRemove.id}`);
+    dispatch(removeMember(memberToRemove.id));
+    setRemoveMemberOpen(false);
   };
 
   const handleAddMemberSubmit = ({ name, email, role }) => {
@@ -34,12 +47,12 @@ const FamilyBlock = () => {
   };
 
   const handleTopUpSubmit = ({ amount, reason }) => {
-    console.log(`Пополнить баланс ребенку с id ${selectedChildId} на сумму ${amount}, причина: ${reason}`);
+    console.log(`Пополнить баланс ребенку с id ${childIdToTopUp} на сумму ${amount}, причина: ${reason}`);
     
     if (!isNaN(amount) && amount !== 0) {
-      dispatch(topUpChildBalance({ childId: selectedChildId, amount, reason }));
+      dispatch(topUpChildBalance({ childId: childIdToTopUp, amount, reason }));
     }
-    setSelectedChildId(null);
+    setChildIdToTopUp(null);
   };
 
   return (
@@ -61,11 +74,25 @@ const FamilyBlock = () => {
       <Box mb={4}>
         <Heading size="md" mb={2}>Родители</Heading>
         <Stack spacing={2}>
-          {parents.map(parent => (
+          {members.filter(m => m.role === 'parent').map(parent => (
             <Flex key={parent.id} align="center">
-              <Text>
-                {parent.name} {parent.id === currentUser.id && '(вы)'}
-              </Text>
+              <Box>
+                <Text>
+                  {parent.name} {parent.id === currentUser.id && '(вы)'}
+                </Text>
+              </Box>
+              {parent.id !== currentUser.id && (
+                <Box ml="2">
+                <Button 
+                  size="xs" 
+                  variant='ghost' 
+                  colorScheme='red'
+                  onClick={() => handleRemoveMemberClick(parent)}
+                >
+                  Удалить
+                </Button>
+                </Box>
+              )}
             </Flex>
           ))}
         </Stack>
@@ -75,20 +102,29 @@ const FamilyBlock = () => {
       <Box mb={4}>
         <Heading size="md" mb={2}>Дети</Heading>
         <Stack spacing={2}>
-          {children.map(child => (
+          {members.filter(m => m.role === 'child').map(child => (
               <Flex key={child.id} align="center">
                 <Box>
                   <Text>{child.name}</Text>
+                </Box>
+                <Box ml="2">
+                  <Button 
+                    size="xs" 
+                    variant='ghost' 
+                    colorScheme='red'
+                    onClick={() => handleRemoveMemberClick(child)}
+                  >
+                    Удалить
+                  </Button>
                 </Box>
                 <Spacer />
                 <Box>
                   <Text>{child.balance} ⭐️</Text>
                 </Box>
-                <Box ml="4">
+                <Box ml="2">
                   <Button 
-                    bg="teal.500" 
-                    color="white"
-                    _hover={{ bg: "teal.600" }} 
+                    size="sm" 
+                    colorScheme='teal'
                     onClick={() => handleTopUpClick(child.id)}
                   >
                     +
@@ -103,10 +139,8 @@ const FamilyBlock = () => {
       <Spacer />
 
       <Flex mt="auto">
-        <Button 
-          bg="teal.500" 
-          color="white"
-          _hover={{ bg: "teal.600" }} 
+        <Button
+          colorScheme='teal' 
           width="100%" 
           onClick={handleAddMemberClick}
         >
@@ -121,6 +155,18 @@ const FamilyBlock = () => {
           isOpen={isTopupOpen}
           onClose={() => setTopupOpen(false)}
           onSubmit={handleTopUpSubmit}
+        />
+        <YesNoAlert
+          isOpen={isRemoveMemberOpen}
+          title="Удалить члена семьи"
+          message={
+            <>
+              Вы уверены, что хотите удалить члена семьи по имени <b>{memberToRemove?.name}</b>?
+            </>
+          }
+          type="destructive"
+          onClose={() => setRemoveMemberOpen(false)}
+          onYes={handleRemoveMemberSubmit}
         />
       </Flex>
     </Box>
