@@ -7,11 +7,16 @@ import {
     ModalBody,
     ModalCloseButton,
     Button,
-    FormControl,
-    FormLabel,
+    Text,
+    Flex,
   } from '@chakra-ui/react';
 
-  const YesNoAlert = ({ isOpen, onClose, title, message, type, onYes, onNo }) => {
+  const YesNoAlert = ({ isOpen, onClose, title, message, type="default", onYes, onNo=onClose }) => {
+    const colorSchemeMap = {
+      destructive: "red",
+      default: "teal",
+    };
+    
     return (
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
@@ -19,17 +24,17 @@ import {
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <FormControl>
-              <FormLabel>{message}</FormLabel>
-            </FormControl>
+            <Text>{message}</Text>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme={ type === "destructive" ? "red" : "teal"} mr={3} onClick={onYes}>
-              Да
-            </Button>
-            <Button variant="ghost" onClick={onNo ? onNo : onClose}>
-              Нет
-            </Button>
+            <Flex>
+              <Button colorScheme={colorSchemeMap[type] || colorSchemeMap.default} mr={3} onClick={onYes}>
+                Да
+              </Button>
+              <Button variant="ghost" onClick={onNo}>
+                Нет
+              </Button>
+            </Flex>
           </ModalFooter>
         </ModalContent>
       </Modal>
