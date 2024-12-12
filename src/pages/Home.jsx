@@ -67,7 +67,7 @@ const Home = () => {
       w="100%"
       h="100%"
     >
-      <GoalsBlock currentUser={currentUser} goals={goals} />
+      <GoalsBlock />
     </Box>
   );
 };

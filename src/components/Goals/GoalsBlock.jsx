@@ -1,10 +1,16 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { Box, Button, SimpleGrid, Flex, Spacer, Heading } from "@chakra-ui/react";
 
 import GoalCard from "./GoalCard";
 import AddGoalForm from "./AddGoalForm";
+import { addGoal, removeGoal } from "../../redux/goalsSlice";
 
-const GoalsBlock = ({currentUser, goals}) => {
+const GoalsBlock = () => {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.auth.user);
+  const goals = useSelector((state) => state.goals.items);
+
   const isParent = currentUser.role === 'parent';
 
   const [isAddGoalOpen, setAddGoalOpen] = useState(false);
@@ -15,10 +21,12 @@ const GoalsBlock = ({currentUser, goals}) => {
 
   const onAddGoalSubmit = ({ title, price, image }) => {
     console.log(`Добавить цель: ${title} ${price} ${image}`)
+    dispatch(addGoal({ title, price, image }));
   };
 
   const onDeleteGoal = (goalId) => {
     console.log(`Delete goal with id ${goalId}`)
+    dispatch(removeGoal(goalId));
   };
 
   const onPurchaseGoal = (goalId) => {
