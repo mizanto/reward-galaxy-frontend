@@ -1,14 +1,20 @@
 import React from 'react';
 import { Box, Flex, Spacer, Button, Link as ChakraLink } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { logout } from '../../redux/authSlice';
 
 const Header = () => {
-  const isAuthenticated = true; // TODO: replace with actual authentication state
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
-  // Logout handler
   const handleLogout = () => {
-    // TODO: Implement logout logic
     console.log('Logout clicked');
+    dispatch(logout());
+    navigate('/login');
   };
 
   return (
