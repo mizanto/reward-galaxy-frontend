@@ -1,28 +1,11 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 
 import FamilyBlock from '../components/Family/FamilyBlock';
 import GoalsBlock from '../components/Goals/GoalsBlock';
 
 // Mock data 
-
-const currentUser = {
-  id: 1,
-  role: 'parent', // 'parent' или 'child'
-  name: 'Иван',
-  balance: 30
-};
-
-const familyData = {
-  parents: [
-    { id: 1, name: 'Иван', role: 'parent' },
-    { id: 2, name: 'Мария', role: 'parent' }
-  ],
-  children: [
-    { id: 3, name: 'Дима', role: 'child', balance: 10 },
-    { id: 4, name: 'Аня', role: 'child', balance: 5 }
-  ]
-};
 
 const goals = [
   {
@@ -64,6 +47,7 @@ const goals = [
 ];
 
 const Home = () => {
+  const currentUser = useSelector(state => state.auth.user);
   return currentUser.role === "parent" ? (
     <Grid 
       templateColumns={{ base: "1fr", sm: "1fr 1fr", md: "1fr 2fr", lg: "1fr 3fr"}}
@@ -72,7 +56,7 @@ const Home = () => {
       h="100%"
     >
       <GridItem overflow="auto">
-        <FamilyBlock currentUser={currentUser} family={familyData} />
+        <FamilyBlock/>
       </GridItem>
       <GridItem overflow="auto">
         <GoalsBlock currentUser={currentUser} goals={goals} />

@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { Box, Heading, Text, Button, Stack, Flex, Spacer } from '@chakra-ui/react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import AddMemberForm from './AddMemberForm';
 import TopupForm from './TopupForm';
+import { addMember, topUpChildBalance } from '../../redux/familySlice';
 
-const FamilyBlock = ({currentUser, family}) => {
-  const {parents, children} = family;
+const FamilyBlock = () => {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.auth.user);
+  console.log('Current User:', currentUser);
+  const { parents, children } = useSelector((state) => state.family);
   const isParent = currentUser.role === 'parent';
 
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
@@ -25,10 +30,15 @@ const FamilyBlock = ({currentUser, family}) => {
 
   const handleAddMemberSubmit = ({ name, email, role }) => {
     console.log(`Добавить члена семьи: ${name} ${email} (${role})`);
+    dispatch(addMember({ name, email, role }));
   };
 
   const handleTopUpSubmit = ({ amount, reason }) => {
     console.log(`Пополнить баланс ребенку с id ${selectedChildId} на сумму ${amount}, причина: ${reason}`);
+    
+    if (!isNaN(amount) && amount !== 0) {
+      dispatch(topUpChildBalance({ childId: selectedChildId, amount, reason }));
+    }
     setSelectedChildId(null);
   };
 
