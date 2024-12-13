@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
@@ -39,7 +39,16 @@ const familySlice = createSlice({
   }
 });
 
-export const selectParents = (state) => state.family.members.filter(m => m.role === 'parent');
-export const selectChildren = (state) => state.family.members.filter(m => m.role === 'child');
+
+export const selectParents = createSelector(
+  (state) => state.family.members,
+  (members) => members.filter((m) => m.role === 'parent')
+);
+
+export const selectChildren = createSelector(
+  (state) => state.family.members,
+  (members) => members.filter((m) => m.role === 'child')
+);
+
 export const { addMember, removeMember, topUpChildBalance } = familySlice.actions;
 export default familySlice.reducer;

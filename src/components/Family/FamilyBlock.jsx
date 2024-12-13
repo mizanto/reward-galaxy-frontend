@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Heading, Text, Button, Stack, Flex, Spacer } from '@chakra-ui/react';
+import { Box, Heading, Button, Flex, Spacer } from '@chakra-ui/react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import AddMemberForm from './AddMemberForm';
 import TopupForm from './TopupForm';
+import MemberList from './MemberList';
 import YesNoAlert from '../Common/YesNoAlert';
 import { addMember, removeMember, topUpChildBalance, selectChildren, selectParents } from '../../redux/familySlice';
 
@@ -14,46 +15,30 @@ const FamilyBlock = () => {
   const children = useSelector(selectChildren);
   const isParent = currentUser.role === 'parent';
 
-  const [isAddMemberOpen, setAddMemberOpen] = useState(false);
-  const [isRemoveMemberOpen, setRemoveMemberOpen] = useState(false);
-  const [isTopupOpen, setTopupOpen] = useState(false);
+  const [modal, setModal] = useState(null); // 'addMember', 'removeMember', 'topUp'
   const [childIdToTopUp, setChildIdToTopUp] = useState(null);
   const [memberToRemove, setMemberToRemove] = useState(null);
 
   if (!isParent) return null;
 
-  const handleAddMemberClick = () => {
-    setAddMemberOpen(true);
-  };
-
-  const handleTopUpClick = (childId) => {
-    setChildIdToTopUp(childId);
-    setTopupOpen(true);
-  };
-
-  const handleRemoveMemberClick = (member) => {
-    setMemberToRemove(member);
-    setRemoveMemberOpen(true);
-  };
-
-  const handleRemoveMemberSubmit = () => {
-    console.log(`Удалить члена семьи с id ${memberToRemove.id}`);
-    dispatch(removeMember(memberToRemove.id));
-    setRemoveMemberOpen(false);
-  };
+  const openModal = (type) => setModal(type);
+  const closeModal = () => setModal(null);
 
   const handleAddMemberSubmit = ({ name, email, role }) => {
-    console.log(`Добавить члена семьи: ${name} ${email} (${role})`);
     dispatch(addMember({ name, email, role }));
+    closeModal();
   };
 
   const handleTopUpSubmit = ({ amount, reason }) => {
-    console.log(`Пополнить баланс ребенку с id ${childIdToTopUp} на сумму ${amount}, причина: ${reason}`);
-    
-    if (!isNaN(amount) && amount !== 0) {
+    if (!isNaN(amount) && amount > 0) {
       dispatch(topUpChildBalance({ childId: childIdToTopUp, amount, reason }));
     }
-    setChildIdToTopUp(null);
+    closeModal();
+  };
+
+  const handleRemoveMemberSubmit = () => {
+    dispatch(removeMember(memberToRemove.id));
+    closeModal();
   };
 
   return (
@@ -72,104 +57,55 @@ const FamilyBlock = () => {
       <Heading size="xl" mb={4}>Семья</Heading>
 
       {/* Parents */}
-      <Box mb={4}>
-        <Heading size="md" mb={2}>Родители</Heading>
-        <Stack spacing={2}>
-          {parents.map(parent => (
-            <Flex key={parent.id} align="center">
-              <Box>
-                <Text>
-                  {parent.name} {parent.id === currentUser.id && '(вы)'}
-                </Text>
-              </Box>
-              {parent.id !== currentUser.id && (
-                <Box ml="2">
-                <Button 
-                  size="xs" 
-                  variant='ghost' 
-                  colorScheme='red'
-                  onClick={() => handleRemoveMemberClick(parent)}
-                >
-                  Удалить
-                </Button>
-                </Box>
-              )}
-            </Flex>
-          ))}
-        </Stack>
-      </Box>
+      <MemberList
+        title={'Родители'}
+        members={parents}
+        currentUserId={currentUser.id}
+        onRemove={(parent) => {
+          setMemberToRemove(parent);
+          openModal('removeMember');
+        }}
+      />
 
-      {/* Childred */}
-      <Box mb={4}>
-        <Heading size="md" mb={2}>Дети</Heading>
-        <Stack spacing={2}>
-          {children.map(child => (
-              <Flex key={child.id} align="center">
-                <Box>
-                  <Text>{child.name}</Text>
-                </Box>
-                <Box ml="2">
-                  <Button 
-                    size="xs" 
-                    variant='ghost' 
-                    colorScheme='red'
-                    onClick={() => handleRemoveMemberClick(child)}
-                  >
-                    Удалить
-                  </Button>
-                </Box>
-                <Spacer />
-                <Box>
-                  <Text>{child.balance} ⭐️</Text>
-                </Box>
-                <Box ml="2">
-                  <Button 
-                    size="sm" 
-                    colorScheme='teal'
-                    onClick={() => handleTopUpClick(child.id)}
-                  >
-                    +
-                  </Button>
-                </Box>
-              </Flex>
-            )
-          )}
-        </Stack>
-      </Box>
+      {/* Children */}
+      <MemberList
+        title={'Дети'}
+        members={children}
+        currentUserId={currentUser.id}
+        onRemove={(child) => {
+          setMemberToRemove(child);
+          openModal('removeMember');
+        }}
+        onTopUp={(childId) => {
+          setChildIdToTopUp(childId);
+          openModal('topUp');
+        }}
+      />
 
       <Spacer />
 
       <Flex mt="auto">
-        <Button
-          colorScheme='teal' 
-          width="100%" 
-          onClick={handleAddMemberClick}
-        >
+        <Button colorScheme="teal" width="100%" onClick={() => openModal('addMember')}>
           Добавить члена семьи
         </Button>
-        <AddMemberForm 
-          isOpen={isAddMemberOpen} 
-          onClose={() => setAddMemberOpen(false)} 
-          onSubmit={handleAddMemberSubmit}
-        />
-        <TopupForm 
-          isOpen={isTopupOpen}
-          onClose={() => setTopupOpen(false)}
-          onSubmit={handleTopUpSubmit}
-        />
+      </Flex>
+
+      {modal === 'addMember' && (
+        <AddMemberForm isOpen={true} onClose={closeModal} onSubmit={handleAddMemberSubmit} />
+      )}
+      {modal === 'topUp' && (
+        <TopupForm isOpen={true} onClose={closeModal} onSubmit={handleTopUpSubmit} />
+      )}
+      {modal === 'removeMember' && (
         <YesNoAlert
-          isOpen={isRemoveMemberOpen}
+          isOpen={true}
           title="Удалить члена семьи"
-          message={
-            <>
-              Вы уверены, что хотите удалить члена семьи по имени <b>{memberToRemove?.name}</b>?
-            </>
-          }
+          message={`Вы уверены, что хотите удалить ${memberToRemove?.name}?`}
           type="destructive"
-          onClose={() => setRemoveMemberOpen(false)}
+          onClose={closeModal}
           onYes={handleRemoveMemberSubmit}
         />
-      </Flex>
+      )}
     </Box>
   );
 };
