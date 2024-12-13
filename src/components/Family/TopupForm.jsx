@@ -10,16 +10,22 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Input
+  Input,
+  Text
 } from '@chakra-ui/react';
 
 const TopupForm = ({ isOpen, onClose, onSubmit }) => {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState('');
   const [reason, setReason] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = () => {
+    if (amount <= 0 || !reason.trim()) {
+      setError('Введите корректные данные');
+      return;
+    }
     onSubmit({ amount, reason });
-    setAmount(0);
+    setAmount('');
     setReason('');
     onClose();
   };
@@ -34,12 +40,13 @@ const TopupForm = ({ isOpen, onClose, onSubmit }) => {
 
         {/* Topup Form */}
         <ModalBody>
+          {error && <Text color="red.500" mb={4}>{error}</Text>}
           <FormControl mb={4}>
             <FormLabel>Сумма</FormLabel>
             <Input
               type="number"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => setAmount(Number(e.target.value))}
               placeholder="Введите сумму"
             />
           </FormControl>
@@ -56,7 +63,12 @@ const TopupForm = ({ isOpen, onClose, onSubmit }) => {
         {/* Buttons */}
         <ModalFooter>
           <Button variant="ghost" onClick={onClose}>Отмена</Button>
-          <Button colorScheme="blue" onClick={handleSubmit} ml={3}>
+          <Button 
+            colorScheme="blue" 
+            onClick={handleSubmit} 
+            ml={3}
+            isDisabled={amount === 0 || !reason.trim()}
+          >
             Добавить
           </Button>
         </ModalFooter>
