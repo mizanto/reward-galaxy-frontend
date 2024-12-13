@@ -11,15 +11,22 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Select
+  Select,
+  Text,
 } from '@chakra-ui/react';
 
 const AddMemberForm = ({ isOpen, onClose, onSubmit }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('child'); // по умолчанию child
+  const [role, setRole] = useState('child');
+  const [error, setError] = useState('');
 
   const handleSubmit = () => {
+    if (!name.trim() || !email.trim()) {
+      setError('Введите корректные данные');
+      return;
+    }
+    setError('');
     onSubmit({ name, email, role });
     setName('');
     setEmail('');
@@ -34,6 +41,7 @@ const AddMemberForm = ({ isOpen, onClose, onSubmit }) => {
         <ModalHeader>Добавить члена семьи</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          {error && <Text color="red.500" mb={4}>{error}</Text>}
           <FormControl mb={4}>
             <FormLabel>Имя</FormLabel>
             <Input 
@@ -63,7 +71,12 @@ const AddMemberForm = ({ isOpen, onClose, onSubmit }) => {
 
         <ModalFooter>
           <Button variant="ghost" onClick={onClose}>Отмена</Button>
-          <Button colorScheme="blue" onClick={handleSubmit} ml={3}>
+          <Button 
+            colorScheme="blue" 
+            onClick={handleSubmit} 
+            ml={3} 
+            isDisabled={!name.trim() || !email.trim()} 
+          >
             Добавить
           </Button>
         </ModalFooter>
