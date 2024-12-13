@@ -24,6 +24,7 @@ const TopupForm = ({ isOpen, onClose, onSubmit }) => {
       setError('Введите корректные данные');
       return;
     }
+    setError('');
     onSubmit({ amount, reason });
     setAmount('');
     setReason('');
@@ -64,7 +65,7 @@ const TopupForm = ({ isOpen, onClose, onSubmit }) => {
         <ModalFooter>
           <Button variant="ghost" onClick={onClose}>Отмена</Button>
           <Button 
-            colorScheme="blue" 
+            colorScheme="teal" 
             onClick={handleSubmit} 
             ml={3}
             isDisabled={amount === 0 || !reason.trim()}

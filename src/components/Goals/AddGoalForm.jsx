@@ -12,18 +12,25 @@ import {
   FormLabel,
   Input,
   NumberInput,
-  NumberInputField
+  NumberInputField,
+  Text
 } from '@chakra-ui/react';
 
 const AddGoalForm = ({ isOpen, onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState('');
   const [image, setImage] = useState('https://via.placeholder.com/150');
+  const [error, setError] = useState('');
 
   const handleSubmit = () => {
+    if (!title.trim() || price <= 0 || !image.trim()) {
+      setError('Пожалуйста, заполните все поля корректно');
+      return;
+    }
+    setError('');
     onSubmit({ title, price, image });
     setTitle('');
-    setPrice(0);
+    setPrice('');
     setImage('https://via.placeholder.com/150');
     onClose();
   };
@@ -32,6 +39,7 @@ const AddGoalForm = ({ isOpen, onClose, onSubmit }) => {
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
+        {error && <Text color="red.500" mb={4}>{error}</Text>}
         <ModalHeader>Добавить цель</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -67,7 +75,12 @@ const AddGoalForm = ({ isOpen, onClose, onSubmit }) => {
 
         <ModalFooter>
           <Button variant="ghost" onClick={onClose}>Отмена</Button>
-          <Button colorScheme="blue" onClick={handleSubmit} ml={3}>
+          <Button 
+            colorScheme="teal" 
+            onClick={handleSubmit} 
+            ml={3}
+            isDisabled={!title.trim() || price <= 0 || !image.trim()}
+          >
             Добавить
           </Button>
         </ModalFooter>
