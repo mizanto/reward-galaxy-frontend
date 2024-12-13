@@ -7,6 +7,7 @@ import TopupForm from './TopupForm';
 import MemberList from './MemberList';
 import YesNoAlert from '../Common/YesNoAlert';
 import { addMember, removeMember, topUpChildBalance, selectChildren, selectParents } from '../../redux/familySlice';
+import { addTransaction } from '../../redux/transactionsSlice';
 
 const FamilyBlock = () => {
   const dispatch = useDispatch();
@@ -30,8 +31,13 @@ const FamilyBlock = () => {
   };
 
   const handleTopUpSubmit = ({ amount, reason }) => {
-    if (!isNaN(amount) && amount > 0) {
+    if (!isNaN(amount) && amount !== 0) {
       dispatch(topUpChildBalance({ childId: childIdToTopUp, amount, reason }));
+
+      dispatch(addTransaction({
+        amount: amount,
+        reason: reason,
+      }));
     }
     closeModal();
   };

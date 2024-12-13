@@ -11,6 +11,7 @@ const transactionsSlice = createSlice({
   reducers: {
     addTransaction: (state, action) => {
       const { userId, amount, reason, timestamp } = action.payload;
+      console.log('addTransaction action:', action);
       state.transactions.push({
         id: uuidv4(),
         userId,

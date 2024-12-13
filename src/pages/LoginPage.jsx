@@ -12,13 +12,9 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
 
   const handleSubmit = () => {
-    // Mock login, replace with your actual login logic
-    const mockUser = {
-      id: 1,
-      role: 'parent', // или 'child'
-      name: 'Иван',
-      balance: 30
-    };
+    const mockUser = { id: 1, name: 'Иван', email: 'ivan@mail.com', role: 'parent' };
+    // const mockUser = { id: 3, name: 'Дима', email: 'dima@mail.com', role: 'child', balance: 30 };
+    // const mockUser = { id: 4, name: 'Аня', email: 'anya@mail.com', role: 'child', balance: 5 };
 
     dispatch(login(mockUser));
     navigate('/');

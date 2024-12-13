@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { addTransaction } from './transactionsSlice';
-
 const initialState = {
   currentUser: {
     id: 1,
@@ -30,9 +28,6 @@ const userSlice = createSlice({
         state.currentUser.balance += amount;
 
         console.log("transaction: ", amount, reason)
-        action.dispatch(
-            addTransaction({userId: state.currentUser.id, amount, reason,})
-        );
       }
     }
   }

@@ -4,7 +4,9 @@ import { Box, Button, SimpleGrid, Flex, Spacer, Heading } from "@chakra-ui/react
 
 import GoalCard from "./GoalCard";
 import AddGoalForm from "./AddGoalForm";
-import { addGoal, removeGoal } from "../../redux/goalsSlice";
+import { addGoal, removeGoal, purchaseGoal } from "../../redux/goalsSlice";
+import { updateBalance } from "../../redux/userSlice";
+import { addTransaction } from "../../redux/transactionsSlice";
 
 const calculateGoalProgress = (balance, price) => ({
   progress: Math.min((balance / price) * 100, 100), // limit progress to 100%
@@ -17,9 +19,12 @@ const calculateGoalProgress = (balance, price) => ({
 const GoalsBlock = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
-  const goals = useSelector((state) => state.goals.items);
+  const allGoals = useSelector((state) => state.goals.items);
 
   const isParent = currentUser.role === 'parent';
+  const goals = isParent
+    ? allGoals
+    : allGoals.filter(goal => !goal.purchasedBy || goal.purchasedBy === currentUser.id);
 
   const [isAddGoalOpen, setAddGoalOpen] = useState(false);
 
@@ -37,7 +42,20 @@ const GoalsBlock = () => {
   };
 
   const onPurchaseGoal = (goalId) => {
-    console.log(`Purchase goal with id ${goalId}`)
+    const goal = allGoals.find(goal => goal.id === goalId);
+    if (!goal || currentUser.balance < goal.price) return;
+
+    // Списание звёздочек
+    dispatch(updateBalance({ amount: -goal.price }));
+
+    // Обновление статуса цели
+    dispatch(purchaseGoal({ goalId, userId: currentUser.id }));
+
+    // Запись транзакции
+    dispatch(addTransaction({
+      amount: -goal.price,
+      reason: `Покупка цели: ${goal.title}`,
+    }));
   };
 
   // render
