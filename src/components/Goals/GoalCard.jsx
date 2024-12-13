@@ -1,25 +1,14 @@
 import React from "react";
 import { Box, Button, Text, Image, Flex, Spacer, Progress } from "@chakra-ui/react";
 
-const GoalCard = ({ balance, goal, userRole, onDeleteGoal, onPurchaseGoal }) => {
-  let buttonTitle;
-  if (userRole === "parent") {
-    buttonTitle = "Удалить";
-  } else {
-    buttonTitle = balance < goal.price ? `Не хватает ${goal.price - balance} ⭐️` : "Купить";
-  }
+const GoalCard = ({ goal, userRole, balance, progress, progressColor, onDeleteGoal, onPurchaseGoal }) => {
+  const buttonTitle = userRole === "parent"
+    ? "Удалить"
+    : balance < goal.price
+      ? `Не хватает ${goal.price - balance} ⭐️`
+      : "Купить";
 
-  const progress = (balance / goal.price) * 100;
-  let progressColor;
-  if (progress < 30) {
-    progressColor = "red";
-  } else if (progress < 50) {
-    progressColor = "yellow";
-  } else if (progress < 70) {
-    progressColor = "green";
-  } else { 
-    progressColor = "teal";
-  }
+  const isDisabled = userRole === "child" && balance < goal.price;
 
   return (
     <Box
@@ -50,27 +39,15 @@ const GoalCard = ({ balance, goal, userRole, onDeleteGoal, onPurchaseGoal }) => 
       )}
 
       <Flex mt="auto">
-        {userRole === "parent" && (
-          <Button
-            size="md"
-            width="100%"
-            colorScheme='red'
-            onClick={() => onDeleteGoal(goal.id)}
-          >
-            {buttonTitle}
-          </Button>
-        )}
-        {userRole === "child" && (
-          <Button
-            size="md"
-            width="100%"
-            colorScheme='teal'
-            isDisabled={balance < goal.price}
-            onClick={() => onPurchaseGoal(goal.id)}
-          >
-            {buttonTitle}
-          </Button>
-        )}
+        <Button
+          size="md"
+          width="100%"
+          colorScheme={userRole === "parent" ? "red" : "teal"}
+          isDisabled={isDisabled}
+          onClick={() => (userRole === "parent" ? onDeleteGoal(goal.id) : onPurchaseGoal(goal.id))}
+        >
+          {buttonTitle}
+        </Button>
       </Flex>
     </Box>
   );
