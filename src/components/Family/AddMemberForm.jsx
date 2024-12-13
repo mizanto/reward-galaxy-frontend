@@ -22,6 +22,7 @@ const AddMemberForm = ({ isOpen, onClose, onSubmit }) => {
   const handleSubmit = () => {
     onSubmit({ name, email, role });
     setName('');
+    setEmail('');
     setRole('child');
     onClose();
   };

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
   members: [
@@ -15,9 +16,8 @@ const familySlice = createSlice({
   reducers: {
     addMember(state, action) {
       const { name, email, role } = action.payload;
-      const newId = Date.now(); // just a simple way to generate a unique ID for now
       state.members.push({ 
-        id: newId, 
+        id: uuidv4(), 
         name: name, 
         email: email, 
         role: role, 
@@ -25,7 +25,6 @@ const familySlice = createSlice({
       });
     },
     removeMember(state, action) {
-      console.log('Removing member with ID:', action.payload);
       const id = action.payload;
       state.members = state.members.filter(member => member.id !== id);
     },
@@ -40,5 +39,7 @@ const familySlice = createSlice({
   }
 });
 
+export const selectParents = (state) => state.family.members.filter(m => m.role === 'parent');
+export const selectChildren = (state) => state.family.members.filter(m => m.role === 'child');
 export const { addMember, removeMember, topUpChildBalance } = familySlice.actions;
 export default familySlice.reducer;

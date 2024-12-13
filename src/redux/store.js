@@ -1,12 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './authSlice';
+import logger from 'redux-logger';
+import userReducer from './userSlice';
 import familyReducer from './familySlice';
 import goalsReducer from './goalsSlice';
+import transactionsReducer from './transactionsSlice';
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
+    user: userReducer,
     family: familyReducer,
-    goals: goalsReducer
-  }
+    goals: goalsReducer,
+    transactions: transactionsReducer
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)
 });

@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { logout } from '../../redux/authSlice';
+import { logout } from '../../redux/userSlice';
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(state => state.user.isAuthenticated);
 
   const handleLogout = () => {
     console.log('Logout clicked');

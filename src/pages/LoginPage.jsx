@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Heading, FormControl, FormLabel, Input, Button, Text } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../redux/authSlice';
+import { login } from '../redux/userSlice';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ const LoginPage = () => {
       id: 1,
       role: 'parent', // или 'child'
       name: 'Иван',
-      balance: 10
+      balance: 30
     };
 
     dispatch(login(mockUser));

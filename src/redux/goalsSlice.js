@@ -1,5 +1,5 @@
-// src/redux/goalsSlice.js
 import { createSlice } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
   items: [
@@ -48,16 +48,17 @@ const goalsSlice = createSlice({
   reducers: {
     addGoal(state, action) {
       const { title, price, image } = action.payload;
-      state.items.push({ 
-        id: Date.now(), 
-        title: title,
-        price: price, 
-        image: image
-      });
+      if (title && price > 0) {
+        state.items.push({ 
+          id: uuidv4(), 
+          title: title,
+          price: price, 
+          image: image
+        });
+      }
     },
     removeGoal(state, action) {
       const goalId = action.payload;
-      console.log("Removing goal with ID:", goalId);
       state.items = state.items.filter(goal => goal.id !== goalId);
     }
   }

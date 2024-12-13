@@ -6,7 +6,7 @@ import FamilyBlock from '../components/Family/FamilyBlock';
 import GoalsBlock from '../components/Goals/GoalsBlock';
 
 const Home = () => {
-  const currentUser = useSelector(state => state.auth.user);
+  const currentUser = useSelector(state => state.user.currentUser);
   return currentUser.role === "parent" ? (
     <Grid 
       templateColumns={{ base: "1fr", sm: "1fr 1fr", md: "1fr 2fr", lg: "1fr 3fr"}}

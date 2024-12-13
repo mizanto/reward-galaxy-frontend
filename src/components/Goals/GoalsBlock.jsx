@@ -8,7 +8,7 @@ import { addGoal, removeGoal } from "../../redux/goalsSlice";
 
 const GoalsBlock = () => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.auth.user);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const goals = useSelector((state) => state.goals.items);
 
   const isParent = currentUser.role === 'parent';

@@ -5,12 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import AddMemberForm from './AddMemberForm';
 import TopupForm from './TopupForm';
 import YesNoAlert from '../Common/YesNoAlert';
-import { addMember, removeMember, topUpChildBalance } from '../../redux/familySlice';
+import { addMember, removeMember, topUpChildBalance, selectChildren, selectParents } from '../../redux/familySlice';
 
 const FamilyBlock = () => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.auth.user);
-  const members = useSelector((state) => state.family.members);
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const parents = useSelector(selectParents);
+  const children = useSelector(selectChildren);
   const isParent = currentUser.role === 'parent';
 
   const [isAddMemberOpen, setAddMemberOpen] = useState(false);
@@ -74,7 +75,7 @@ const FamilyBlock = () => {
       <Box mb={4}>
         <Heading size="md" mb={2}>Родители</Heading>
         <Stack spacing={2}>
-          {members.filter(m => m.role === 'parent').map(parent => (
+          {parents.map(parent => (
             <Flex key={parent.id} align="center">
               <Box>
                 <Text>
@@ -102,7 +103,7 @@ const FamilyBlock = () => {
       <Box mb={4}>
         <Heading size="md" mb={2}>Дети</Heading>
         <Stack spacing={2}>
-          {members.filter(m => m.role === 'child').map(child => (
+          {children.map(child => (
               <Flex key={child.id} align="center">
                 <Box>
                   <Text>{child.name}</Text>
