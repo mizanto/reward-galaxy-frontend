@@ -1,13 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { parseUserData } from '../utils/parser';
+
 const initialState = {
-  currentUser: {
-    id: 1,
-    role: 'parent',  // или 'child'
-    name: 'Иван',
-    balance: 5
-  },
-  isAuthenticated: true // для примера, потом этот флаг будет меняться после логина/логаута
+  currentUser: null,
+  isAuthenticated: false
 };
 
 const userSlice = createSlice({
@@ -20,7 +17,7 @@ const userSlice = createSlice({
     },
     login(state, action) {
       state.isAuthenticated = true;
-      state.currentUser = action.payload;
+      state.currentUser = parseUserData(action.payload);
     },
     updateBalance(state, action) {
       const { amount, reason } = action.payload;

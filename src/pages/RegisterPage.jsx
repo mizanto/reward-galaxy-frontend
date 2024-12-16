@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Heading, FormControl, FormLabel, Input, Button, Text } from '@chakra-ui/react';
+import { Box, Heading, FormControl, Input, Button, Text } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { login } from '../redux/userSlice';
 import { registerFamily } from '../api/authService';
-import { validateRegisterForm, parseError } from '../utils/validation';
+import { validateRegisterForm } from '../utils/validation';
+import { parseRegisterError } from '../utils/parser';
+import RequiredFormLabel from '../components/Common/RequiredFormLabel'
+import ErrorMessage from '../components/Common/ErrorMessage';
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -16,10 +19,10 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState([]);
 
   const handleSubmit = async () => {
-    setError([]);
+    setErrors([]);
 
     const formErrors = validateRegisterForm({
       name,
@@ -30,16 +33,16 @@ const Register = () => {
     });
 
     if (formErrors.length > 0) {
-      setError(formErrors);
+      setErrors(formErrors);
       return;
     }
 
     try {
       const registerData = { email, name, family_name: familyName, password };
-      console.log('Registering user:', registerData);
+      console.debug('Registering user:', registerData);
 
       const response = await registerFamily(registerData);
-      console.log('Registration successful:', response);
+      console.debug('Registration successful:', response);
 
       dispatch(login(response.data));
       navigate('/');
@@ -47,11 +50,10 @@ const Register = () => {
       console.error('Registration failed:', e.response?.data || e.message);
       
       if (e.response?.data?.detail) {
-        const errorMessages = parseError(e);
-        console.log('Error messages:', errorMessages);
-        setError(errorMessages);
+        const errorMessages = parseRegisterError(e);
+        setErrors(errorMessages);
       } else {
-        setError('Ошибка регистрации');
+        setErrors('Ошибка регистрации');
       }
     }
   };
@@ -60,21 +62,10 @@ const Register = () => {
     <Box maxW="md" mx="auto" mt={10} p={6} borderWidth="1px" borderRadius="lg">
       <Heading mb={6}>Регистрация</Heading>
 
-      {error && (
-        <Text color="red.500" mb={4}>
-          {error.map((msg, index) => (
-            <React.Fragment key={index}>
-              {msg}
-              <br />
-            </React.Fragment>
-          ))}
-        </Text>
-      )}
+      {errors && <ErrorMessage errors={errors} />}
 
       <FormControl mb={4}>
-        <FormLabel>
-          Имя <Box as="span" color="red.500">*</Box>
-        </FormLabel>
+        <RequiredFormLabel text="Имя" />
         <Input 
           type="text" 
           value={name}
@@ -84,7 +75,7 @@ const Register = () => {
       </FormControl>
 
       <FormControl mb={4}>
-        <FormLabel>Название семьи</FormLabel>
+        <RequiredFormLabel text="Название семьи" />
         <Input 
           type="text" 
           value={familyName}
@@ -94,9 +85,7 @@ const Register = () => {
       </FormControl>
 
       <FormControl mb={4}>
-        <FormLabel>
-          Email <Box as="span" color="red.500">*</Box>
-        </FormLabel>
+        <RequiredFormLabel text="Email" />
         <Input 
           type="email"
           value={email}
@@ -106,9 +95,7 @@ const Register = () => {
       </FormControl>
       
       <FormControl mb={4}>
-        <FormLabel>
-          Пароль <Box as="span" color="red.500">*</Box>
-        </FormLabel>
+        <RequiredFormLabel text="Пароль" />
         <Input 
           type="password"
           value={password}
@@ -118,9 +105,7 @@ const Register = () => {
       </FormControl>
 
       <FormControl mb={4}>
-        <FormLabel>
-          Подтвердите пароль <Box as="span" color="red.500">*</Box>
-        </FormLabel>
+        <RequiredFormLabel text="Подтвердите пароль" />
         <Input 
           type="password"
           value={confirmPassword}

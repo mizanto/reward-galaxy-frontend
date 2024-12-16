@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 
 import FamilyBlock from '../components/Family/FamilyBlock';
 import GoalsBlock from '../components/Goals/GoalsBlock';
 
 const Home = () => {
-  const currentUser = useSelector(state => state.user.currentUser);
-  return currentUser.role === "parent" ? (
+  const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const isParent = currentUser.role === "parent";
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/login');
+    }
+  }, [currentUser, navigate]);
+
+  if (!currentUser) {
+    return null;
+  }
+
+  return isParent ? (
     <Grid 
       templateColumns={{ base: "1fr", sm: "1fr 1fr", md: "1fr 2fr", lg: "1fr 3fr"}}
       gap={4}
@@ -15,17 +29,14 @@ const Home = () => {
       h="100%"
     >
       <GridItem overflow="auto">
-        <FamilyBlock/>
+        <FamilyBlock />
       </GridItem>
       <GridItem overflow="auto">
-        <GoalsBlock/>
+        <GoalsBlock />
       </GridItem>
-  </Grid>
+    </Grid>
   ) : (
-    <Box
-      w="100%"
-      h="100%"
-    >
+    <Box w="100%" h="100%">
       <GoalsBlock />
     </Box>
   );
