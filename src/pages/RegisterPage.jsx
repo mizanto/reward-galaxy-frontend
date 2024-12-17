@@ -44,7 +44,7 @@ const Register = () => {
       const response = await registerFamily(registerData);
       console.debug('Registration successful:', response);
 
-      dispatch(login(response.data));
+      dispatch(login(response));
       navigate('/');
     } catch (e) {
       console.error('Registration failed:', e.response?.data || e.message);
