@@ -6,9 +6,11 @@ import AddMemberForm from './AddMemberForm';
 import TopupForm from './TopupForm';
 import MemberList from './MemberList';
 import YesNoAlert from '../Common/YesNoAlert';
+import MessageBox from '../Common/MessageBox';
 import { addFamilyMember } from '../../api/familyService';
 import { addMember, removeMember, topUpChildBalance, selectChildren, selectParents, fetchFamilyMembers } from '../../redux/familySlice';
 import { addTransaction } from '../../redux/transactionsSlice';
+import { parseAddMemberError } from '../../utils/parser';
 
 const FamilyBlock = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ const FamilyBlock = () => {
   const [modal, setModal] = useState(null); // 'addMember', 'removeMember', 'topUp'
   const [childIdToTopUp, setChildIdToTopUp] = useState(null);
   const [memberToRemove, setMemberToRemove] = useState(null);
+  const [serverError, setServerError] = useState(null); 
 
   useEffect(() => {
     dispatch(fetchFamilyMembers());
@@ -30,20 +33,16 @@ const FamilyBlock = () => {
   const closeModal = () => setModal(null);
 
   const handleAddMemberSubmit = async ({ name, email, role, password }) => {
-    if (!name || !email || !role || !password) {
-      alert('Пожалуйста, заполните все поля');
-      return;
-    }
-
     try {
-      const response = await addFamilyMember({ name, email, role, password });
-      console.debug('Результат добавления члена семьи:', response);
+      const member = await addFamilyMember({ name, email, role, password });
+      console.debug('Added member:', member);
 
-      dispatch(addMember(response));
+      dispatch(addMember(member));
       closeModal();
     } catch (error) {
-      console.error('Ошибка при добавлении члена семьи:', error);
-      return;
+      const parsedErrors = parseAddMemberError(error);
+      const errorMessage = parsedErrors.join('. ');
+      setServerError(errorMessage);
     }
   };
 
@@ -114,6 +113,9 @@ const FamilyBlock = () => {
           openModal('topUp');
         }}
       />
+
+      {/* MessageBox для ошибок */}
+      {serverError && <MessageBox message={serverError} type='error' onClose={() => setServerError(null)} />}
 
       <Spacer />
 

@@ -102,7 +102,7 @@ const AddMemberForm = ({ isOpen, onClose, onSubmit }) => {
         <ModalFooter>
           <Button variant="ghost" onClick={handleClose}>Отмена</Button>
           <Button 
-            colorScheme="blue" 
+            colorScheme="teal" 
             onClick={handleSubmit} 
             ml={3} 
             isDisabled={!formData.name.trim() || !formData.email.trim() || !formData.password.trim()} 

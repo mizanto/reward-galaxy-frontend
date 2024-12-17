@@ -50,6 +50,28 @@ export const parseLoginError = (error) => {
   return parseApiError(error, loginErrorMap);
 };
 
+export const parseAddMemberError = (error) => {
+  const addMemberErrorMap = {
+    400: {
+      commonMessage: errorMessages.emailExists,
+    },
+    403: {
+      commonMessage: errorMessages.noPermissionAddMember,
+    },
+    404: {
+      commonMessage: errorMessages.familyNotFound,
+    },
+    422: {
+      fieldMessages: {
+        email: errorMessages.requiredEmail,
+        name: errorMessages.requiredName,
+        password: errorMessages.requiredPasswordCommon,
+      },
+    },
+  };
+  return parseApiError(error, addMemberErrorMap);
+};
+
 export const parseUserData = (userData) => {
   return {
     id: userData.id,

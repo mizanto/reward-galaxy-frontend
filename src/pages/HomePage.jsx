@@ -9,7 +9,6 @@ import GoalsBlock from '../components/Goals/GoalsBlock';
 const Home = () => {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user.currentUser);
-  const isParent = currentUser.role === "parent";
 
   useEffect(() => {
     if (!currentUser) {
@@ -20,6 +19,8 @@ const Home = () => {
   if (!currentUser) {
     return null;
   }
+
+  const isParent = currentUser.role === "parent";
 
   return isParent ? (
     <Grid 
