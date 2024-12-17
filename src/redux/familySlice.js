@@ -1,14 +1,25 @@
-import { createSlice, createSelector } from '@reduxjs/toolkit';
+import { createSlice, createSelector, createAsyncThunk } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
+import { getFamilyMembers } from '../api/familyService';
+
 const initialState = {
-  members: [
-    { id: 1, name: 'Иван', email: 'ivan@mail.com', role: 'parent' },
-    { id: 2, name: 'Мария', email: 'maria@mail.com', role: 'parent' },
-    { id: 3, name: 'Дима', email: 'dima@mail.com', role: 'child', balance: 10 },
-    { id: 4, name: 'Аня', email: 'anya@mail.com', role: 'child', balance: 5 }
-  ]
+  members: [],
+  status: 'idle', // idle | loading | succeeded | failed
+  error: null
 };
+
+export const fetchFamilyMembers = createAsyncThunk(
+  'family/fetchFamilyMembers',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getFamilyMembers();
+      return data;
+    } catch (error) {
+      return rejectWithValue('Не удалось загрузить членов семьи');
+    }
+  }
+);
 
 const familySlice = createSlice({
   name: 'family',
@@ -36,7 +47,22 @@ const familySlice = createSlice({
         child.balance += numericAmount;
       }
     }
-  }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchFamilyMembers.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchFamilyMembers.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        console.log('Fetched members:', action.payload);
+        state.members = action.payload;
+      })
+      .addCase(fetchFamilyMembers.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      });
+  },
 });
 
 

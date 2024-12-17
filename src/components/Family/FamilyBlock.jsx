@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Box, Heading, Button, Flex, Spacer } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { Box, Heading, Button, Flex, Spacer, Spinner, Text } from '@chakra-ui/react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import AddMemberForm from './AddMemberForm';
 import TopupForm from './TopupForm';
 import MemberList from './MemberList';
 import YesNoAlert from '../Common/YesNoAlert';
-import { addMember, removeMember, topUpChildBalance, selectChildren, selectParents } from '../../redux/familySlice';
+import { addMember, removeMember, topUpChildBalance, selectChildren, selectParents, fetchFamilyMembers } from '../../redux/familySlice';
 import { addTransaction } from '../../redux/transactionsSlice';
 
 const FamilyBlock = () => {
@@ -14,13 +14,16 @@ const FamilyBlock = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const parents = useSelector(selectParents);
   const children = useSelector(selectChildren);
+  const { status, error } = useSelector((state) => state.family);
   const isParent = currentUser.role === 'parent';
 
   const [modal, setModal] = useState(null); // 'addMember', 'removeMember', 'topUp'
   const [childIdToTopUp, setChildIdToTopUp] = useState(null);
   const [memberToRemove, setMemberToRemove] = useState(null);
 
-  if (!isParent) return null;
+  useEffect(() => {
+    dispatch(fetchFamilyMembers());
+  }, [dispatch]);
 
   const openModal = (type) => setModal(type);
   const closeModal = () => setModal(null);
@@ -46,6 +49,16 @@ const FamilyBlock = () => {
     dispatch(removeMember(memberToRemove.id));
     closeModal();
   };
+
+  if (!isParent) return null;
+
+  if (status === 'loading') {
+    return <Spinner size="xl" color="teal" />;
+  }
+
+  if (status === 'failed') {
+    return <Text color="red.500">Ошибка: {error}</Text>;
+  }
 
   return (
     <Box 
