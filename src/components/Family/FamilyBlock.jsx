@@ -6,6 +6,7 @@ import AddMemberForm from './AddMemberForm';
 import TopupForm from './TopupForm';
 import MemberList from './MemberList';
 import YesNoAlert from '../Common/YesNoAlert';
+import { addFamilyMember } from '../../api/familyService';
 import { addMember, removeMember, topUpChildBalance, selectChildren, selectParents, fetchFamilyMembers } from '../../redux/familySlice';
 import { addTransaction } from '../../redux/transactionsSlice';
 
@@ -28,9 +29,22 @@ const FamilyBlock = () => {
   const openModal = (type) => setModal(type);
   const closeModal = () => setModal(null);
 
-  const handleAddMemberSubmit = ({ name, email, role }) => {
-    dispatch(addMember({ name, email, role }));
-    closeModal();
+  const handleAddMemberSubmit = async ({ name, email, role, password }) => {
+    if (!name || !email || !role || !password) {
+      alert('Пожалуйста, заполните все поля');
+      return;
+    }
+
+    try {
+      const response = await addFamilyMember({ name, email, role, password });
+      console.debug('Результат добавления члена семьи:', response);
+
+      dispatch(addMember(response));
+      closeModal();
+    } catch (error) {
+      console.error('Ошибка при добавлении члена семьи:', error);
+      return;
+    }
   };
 
   const handleTopUpSubmit = ({ amount, reason }) => {

@@ -9,73 +9,103 @@ import {
   ModalCloseButton,
   Button,
   FormControl,
-  FormLabel,
   Input,
   Select,
-  Text,
 } from '@chakra-ui/react';
 
+import RequiredFormLabel from '../Common/RequiredFormLabel'
+import { validateAddMemberForm } from '../../utils/validation';
+import ErrorMessage from '../Common/ErrorMessage';
+
 const AddMemberForm = ({ isOpen, onClose, onSubmit }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('child');
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    role: 'child',
+    password: ''
+  });
+  const [errors, setErrors] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = () => {
-    if (!name.trim() || !email.trim()) {
-      setError('Введите корректные данные');
+    const formErrors = validateAddMemberForm(formData);
+    
+    if (formErrors.length > 0) {
+      setErrors(formErrors);
       return;
     }
-    setError('');
-    onSubmit({ name, email, role });
-    setName('');
-    setEmail('');
-    setRole('child');
+
+    onSubmit(formData);
+    onClose();
+  };
+
+  const handleClose = () => {
+    setFormData({ name: '', email: '', role: 'child', password: '' });
     onClose();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal isOpen={isOpen} onClose={handleClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Добавить члена семьи</ModalHeader>
+
+        {errors && <ErrorMessage errors={errors} />}
+
         <ModalCloseButton />
+
         <ModalBody>
-          {error && <Text color="red.500" mb={4}>{error}</Text>}
           <FormControl mb={4}>
-            <FormLabel>Имя</FormLabel>
+            <RequiredFormLabel text="Имя" />
             <Input 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
+              name="name"
+              value={formData.name}
+              onChange={handleChange} 
               placeholder="Введите имя" 
             />
           </FormControl>
 
           <FormControl mb={4}>
-          <FormLabel>Email</FormLabel>
+            <RequiredFormLabel text="Роль" />
+            <Select name="role" value={formData.role} onChange={handleChange}>
+              <option value="parent">Родитель</option>
+              <option value="child">Ребенок</option>
+            </Select>
+          </FormControl>
+
+          <FormControl mb={4}>
+            <RequiredFormLabel text="Email" />
             <Input 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+              name="email"
+              value={formData.email}
+              onChange={handleChange} 
               placeholder="Введите e-mail" 
             />
           </FormControl>
 
           <FormControl>
-            <FormLabel>Роль</FormLabel>
-            <Select value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="parent">Родитель</option>
-              <option value="child">Ребенок</option>
-            </Select>
+            <RequiredFormLabel text="Пароль" />
+            <Input 
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange} 
+              placeholder="Введите пароль" 
+            />
           </FormControl>
         </ModalBody>
 
         <ModalFooter>
-          <Button variant="ghost" onClick={onClose}>Отмена</Button>
+          <Button variant="ghost" onClick={handleClose}>Отмена</Button>
           <Button 
             colorScheme="blue" 
             onClick={handleSubmit} 
             ml={3} 
-            isDisabled={!name.trim() || !email.trim()} 
+            isDisabled={!formData.name.trim() || !formData.email.trim() || !formData.password.trim()} 
           >
             Добавить
           </Button>

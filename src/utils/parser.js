@@ -61,3 +61,16 @@ export const parseUserData = (userData) => {
     familyName: userData.family_name,
   };
 };
+
+export const parseNewMemberData = (newMemberData) => {
+  console.log('newMemberData', newMemberData);
+  return {
+    id: newMemberData.id,
+    name: newMemberData.name,
+    email: newMemberData.email,
+    role: newMemberData.role,
+    balance: newMemberData.balance || 0,
+    familyId: newMemberData.family_id,
+    familyName: newMemberData.family_name,
+  };
+};

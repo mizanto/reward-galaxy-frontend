@@ -1,7 +1,7 @@
 import { createSlice, createSelector, createAsyncThunk } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
 
 import { getFamilyMembers } from '../api/familyService';
+import { parseNewMemberData } from '../utils/parser';
 
 const initialState = {
   members: [],
@@ -16,7 +16,7 @@ export const fetchFamilyMembers = createAsyncThunk(
       const data = await getFamilyMembers();
       return data;
     } catch (error) {
-      return rejectWithValue('Не удалось загрузить членов семьи');
+      return rejectWithValue(error.response?.data?.detail || 'Не удалось загрузить членов семьи');
     }
   }
 );
@@ -26,14 +26,8 @@ const familySlice = createSlice({
   initialState,
   reducers: {
     addMember(state, action) {
-      const { name, email, role } = action.payload;
-      state.members.push({ 
-        id: uuidv4(), 
-        name: name, 
-        email: email, 
-        role: role, 
-        balance: role === 'child' ? 0 : undefined
-      });
+      const newMember = parseNewMemberData(action.payload)
+      state.members.push(newMember);
     },
     removeMember(state, action) {
       const id = action.payload;
