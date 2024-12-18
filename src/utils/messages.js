@@ -7,5 +7,10 @@ export const errorMessages = {
   passwordsMismatch: "Пароли не совпадают",
   emailExists: "Этот email уже зарегистрирован.",
   imcorrectEmailOrPassword: "Неверный email или пароль.",
+  requiredAmount: "Сумма не должна быть пустой или равной нулю.",
+  requiredReason: "Причина не должна быть пустой.",
+  negativeBalance: "Невозможно совершить транзакцию. Баланс получателя не может быть отрицательным.",
+  wrongReceiver: "Получателем можетт быть только ребенок.",
+  receiverNotFound: "Получатель не найден.",
   unknownError: "Произошла неизвестная ошибка. Попробуйте снова.",
 };

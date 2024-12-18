@@ -72,6 +72,27 @@ export const parseAddMemberError = (error) => {
   return parseApiError(error, addMemberErrorMap);
 };
 
+export const parseTopupError = (error) => {
+  const topupErrorMap = {
+    400: {
+      commonMessage: errorMessages.negativeBalance,
+    },
+    403: {
+      commonMessage: errorMessages.wrongReceiver,
+    },
+    404: {
+      commonMessage: errorMessages.receiverNotFound,
+    },
+    422: {
+      fieldMessages: {
+        amount: errorMessages.requiredAmount,
+        reason: errorMessages.requiredReason,
+      },
+    },
+  };
+  return parseApiError(error, topupErrorMap);
+};
+
 export const parseUserData = (userData) => {
   return {
     id: userData.id,

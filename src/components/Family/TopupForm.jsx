@@ -14,20 +14,38 @@ import {
   Text
 } from '@chakra-ui/react';
 
+import { validateTopupForm } from '../../utils/validation';
+import ErrorMessage from '../Common/ErrorMessage';
+
 const TopupForm = ({ isOpen, onClose, onSubmit }) => {
-  const [amount, setAmount] = useState('');
-  const [reason, setReason] = useState('');
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+      amount: '',
+      reason: '',
+    });
+  const [errors, setErrors] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = () => {
-    if (amount <= 0 || !reason.trim()) {
-      setError('Введите корректные данные');
+    const formErrors = validateTopupForm(formData);
+    console.debug('Form data:', formData);
+    console.debug('Form errors:', formErrors);
+
+        
+    if (formErrors.length > 0) {
+      setErrors(formErrors);
       return;
     }
-    setError('');
-    onSubmit({ amount, reason });
-    setAmount('');
-    setReason('');
+    onSubmit(formData);
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setErrors('');
+    setFormData({ name: '', email: '', role: 'child', password: '' });
     onClose();
   };
 
@@ -37,25 +55,31 @@ const TopupForm = ({ isOpen, onClose, onSubmit }) => {
       <ModalContent>
         {/* Modal Header */}
         <ModalHeader>Пополнить баланс</ModalHeader>
+
+        {/* Errors */}  
+        {errors && <ErrorMessage errors={errors} />}
+
+        {/* Modal Close Button */}
         <ModalCloseButton />
 
         {/* Topup Form */}
         <ModalBody>
-          {error && <Text color="red.500" mb={4}>{error}</Text>}
           <FormControl mb={4}>
             <FormLabel>Сумма</FormLabel>
             <Input
               type="number"
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange} 
               placeholder="Введите сумму"
             />
           </FormControl>
           <FormControl mb={4}>
             <FormLabel>Причина</FormLabel>
             <Input
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
+              value={formData.reason}
+              name="reason"
+              onChange={handleChange} 
               placeholder="Введите причину"
             />
           </FormControl>
@@ -68,7 +92,6 @@ const TopupForm = ({ isOpen, onClose, onSubmit }) => {
             colorScheme="teal" 
             onClick={handleSubmit} 
             ml={3}
-            isDisabled={amount === 0 || !reason.trim()}
           >
             Добавить
           </Button>

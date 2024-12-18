@@ -8,9 +8,10 @@ import MemberList from './MemberList';
 import YesNoAlert from '../Common/YesNoAlert';
 import MessageBox from '../Common/MessageBox';
 import { addFamilyMember, deleteFamilyMember } from '../../api/familyService';
+import { topUpBalance } from '../../api/transactionService';
 import { addMember, removeMember, topUpChildBalance, selectChildren, selectParents, fetchFamilyMembers } from '../../redux/familySlice';
 import { addTransaction } from '../../redux/transactionsSlice';
-import { parseAddMemberError } from '../../utils/parser';
+import { parseAddMemberError, parseTopupError } from '../../utils/parser';
 
 const FamilyBlock = () => {
   const dispatch = useDispatch();
@@ -57,16 +58,20 @@ const FamilyBlock = () => {
     }
   };
 
-  const handleTopUpSubmit = ({ amount, reason }) => {
-    if (!isNaN(amount) && amount !== 0) {
-      dispatch(topUpChildBalance({ childId: childIdToTopUp, amount, reason }));
+  const handleTopUpSubmit = async ({ amount, reason }) => {
+    try {
+      const response = await topUpBalance(childIdToTopUp, amount, reason);
+      console.debug('Successfully top up balance:', response);
 
-      dispatch(addTransaction({
-        amount: amount,
-        reason: reason,
-      }));
+      dispatch(topUpChildBalance({ childId: childIdToTopUp, amount, reason }));
+      dispatch(addTransaction({ amount: amount, reason: reason,}));
+
+      closeModal();
+    } catch (error) {
+      const parsedErrors = parseTopupError(error);
+      const errorMessage = parsedErrors.join('. ');
+      setServerError(errorMessage);
     }
-    closeModal();
   };
 
   if (!isParent) return null;

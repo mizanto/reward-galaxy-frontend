@@ -35,3 +35,13 @@ export const validateAddMemberForm = ({ name, email, password }) => {
 
   return errors;
 }
+
+// Local validation for topup form
+export const validateTopupForm = ({ amount, reason }) => {
+  const errors = [];
+
+  if (!amount || amount === 0) errors.push(errorMessages.requiredAmount);
+  if (!reason.trim()) errors.push(errorMessages.requiredReason);
+
+  return errors;
+}
