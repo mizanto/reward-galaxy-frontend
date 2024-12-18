@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { login } from '../redux/userSlice';
-import { registerFamily } from '../api/authService';
+import { registerFamily, loginUser } from '../api/authService';
 import { validateRegisterForm } from '../utils/validation';
 import { parseRegisterError } from '../utils/parser';
 import RequiredFormLabel from '../components/Common/RequiredFormLabel'
@@ -41,10 +41,13 @@ const Register = () => {
       const registerData = { email, name, family_name: familyName, password };
       console.debug('Registering user:', registerData);
 
-      const response = await registerFamily(registerData);
-      console.debug('Registration successful:', response);
+      const newUser = await registerFamily(registerData);
+      console.debug('Registration successful:', newUser);
 
-      dispatch(login(response));
+      const loginResponse = await loginUser({ email, password });
+      console.debug('Login successful:', loginResponse);
+
+      dispatch(login(newUser));
       navigate('/');
     } catch (e) {
       console.error('Registration failed:', e.response?.data || e.message);
