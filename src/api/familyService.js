@@ -10,3 +10,9 @@ export const addFamilyMember = async (memberData) => {
   const response = await apiClient.post('/family/members', memberData);
   return response.data;
 };
+
+export const deleteFamilyMember = async (memberId) => {
+  console.debug('Deleting family member with ID:', memberId);
+  const response = await apiClient.delete(`/family/members/${memberId}`);
+  return response.data;
+};

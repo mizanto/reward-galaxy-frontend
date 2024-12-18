@@ -7,7 +7,7 @@ import TopupForm from './TopupForm';
 import MemberList from './MemberList';
 import YesNoAlert from '../Common/YesNoAlert';
 import MessageBox from '../Common/MessageBox';
-import { addFamilyMember } from '../../api/familyService';
+import { addFamilyMember, deleteFamilyMember } from '../../api/familyService';
 import { addMember, removeMember, topUpChildBalance, selectChildren, selectParents, fetchFamilyMembers } from '../../redux/familySlice';
 import { addTransaction } from '../../redux/transactionsSlice';
 import { parseAddMemberError } from '../../utils/parser';
@@ -46,6 +46,17 @@ const FamilyBlock = () => {
     }
   };
 
+  const handleRemoveMemberSubmit = async () => {
+    try {
+      await deleteFamilyMember(memberToRemove.id);
+      console.debug('Successfully remove member:', memberToRemove);
+      dispatch(removeMember(memberToRemove.id));
+      closeModal();
+    } catch (error) {
+      setServerError(error.message);
+    }
+  };
+
   const handleTopUpSubmit = ({ amount, reason }) => {
     if (!isNaN(amount) && amount !== 0) {
       dispatch(topUpChildBalance({ childId: childIdToTopUp, amount, reason }));
@@ -55,11 +66,6 @@ const FamilyBlock = () => {
         reason: reason,
       }));
     }
-    closeModal();
-  };
-
-  const handleRemoveMemberSubmit = () => {
-    dispatch(removeMember(memberToRemove.id));
     closeModal();
   };
 
