@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Button, SimpleGrid, Flex, Spacer, Heading } from "@chakra-ui/react";
 
 import RewardCard from "./RewardCard";
 import AddRewardForm from "./AddRewardForm";
-import { addReward, removeReward, purchaseReward } from "../../redux/rewardsSlice";
+import { addReward, removeReward, purchaseReward, fetchRewards } from "../../redux/rewardsSlice";
 import { updateBalance } from "../../redux/userSlice";
 import { addTransaction } from "../../redux/transactionsSlice";
 
@@ -27,6 +27,10 @@ const RewardsBlock = () => {
     : allRewards.filter(reward => !reward.purchasedBy || reward.purchasedBy === currentUser.id);
 
   const [isAddRewardOpen, setAddRewardOpen] = useState(false);
+
+  useEffect(() => {
+      dispatch(fetchRewards());
+    }, [dispatch]);
 
   // event handlers
   const onAddRewardClick = () => setAddRewardOpen(true);
