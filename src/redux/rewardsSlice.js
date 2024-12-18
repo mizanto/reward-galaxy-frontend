@@ -48,11 +48,11 @@ const initialState = {
   ]
 };
 
-const goalsSlice = createSlice({
-  name: 'goals',
+const rewardsSlice = createSlice({
+  name: 'rewards',
   initialState,
   reducers: {
-    addGoal(state, action) {
+    addReward(state, action) {
       const { title, price, image } = action.payload;
       if (title && price > 0) {
         state.items.push({ 
@@ -64,19 +64,19 @@ const goalsSlice = createSlice({
         });
       }
     },
-    removeGoal(state, action) {
-      const goalId = action.payload;
-      state.items = state.items.filter(goal => goal.id !== goalId);
+    removeReward(state, action) {
+      const rewardId = action.payload;
+      state.items = state.items.filter(reward => reward.id !== rewardId);
     },
-    purchaseGoal(state, action) {
-      const { goalId, userId } = action.payload;
-      const goal = state.items.find(goal => goal.id === goalId);
-      if (goal && !goal.purchasedBy) {
-        goal.purchasedBy = userId;
+    purchaseReward(state, action) {
+      const { rewardId, userId } = action.payload;
+      const reward = state.items.find(reward => reward.id === rewardId);
+      if (reward && !reward.purchasedBy) {
+        reward.purchasedBy = userId;
       }
     },
   }
 });
 
-export const { addGoal, removeGoal, purchaseGoal } = goalsSlice.actions;
-export default goalsSlice.reducer;
+export const { addReward, removeReward, purchaseReward } = rewardsSlice.actions;
+export default rewardsSlice.reducer;

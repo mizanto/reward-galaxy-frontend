@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Button, Text, Image, Flex, Spacer, Progress, Badge } from "@chakra-ui/react";
 
-const GoalCard = ({ goal, userRole, balance, progress, progressColor, onDeleteGoal, onPurchaseGoal }) => {
-  const isPurchased = !!goal.purchasedBy;
-  const canPurchase = balance >= goal.price;
+const RewardCard = ({ reward, userRole, balance, progress, progressColor, onDeleteReward, onPurchaseReward }) => {
+  const isPurchased = !!reward.purchasedBy;
+  const canPurchase = balance >= reward.price;
 
   const buttonTitle = userRole === "parent" 
     ? "Удалить" 
@@ -11,7 +11,7 @@ const GoalCard = ({ goal, userRole, balance, progress, progressColor, onDeleteGo
     ? "Приобретено"
     : canPurchase
     ? "Купить" 
-    : `Не хватает ${goal.price - balance} ⭐️`;
+    : `Не хватает ${reward.price - balance} ⭐️`;
 
   const isDisabled = userRole === "child" && (!canPurchase || isPurchased);
 
@@ -33,8 +33,8 @@ const GoalCard = ({ goal, userRole, balance, progress, progressColor, onDeleteGo
       {/* Image with Badge */}
       <Box position="relative" mb="4">
         <Image 
-          src={goal.image} 
-          alt={goal.title} 
+          src={reward.image} 
+          alt={reward.title} 
           objectFit="cover" 
           width="100%" 
           borderRadius="md" 
@@ -53,13 +53,13 @@ const GoalCard = ({ goal, userRole, balance, progress, progressColor, onDeleteGo
       </Box>
 
       <Text fontWeight="bold" fontSize="lg" mb="2">
-        {goal.title}
+        {reward.title}
       </Text>
 
       <Spacer />
 
       <Text color="gray.600" mb="4">
-        Цена: {goal.price} ⭐️
+        Цена: {reward.price} ⭐️
       </Text>
 
       {userRole === "child" && !isPurchased && (
@@ -72,7 +72,7 @@ const GoalCard = ({ goal, userRole, balance, progress, progressColor, onDeleteGo
           width="100%"
           colorScheme={userRole === "parent" ? "red" : "teal"}
           isDisabled={isDisabled}
-          onClick={() => (userRole === "parent" ? onDeleteGoal(goal.id) : onPurchaseGoal(goal.id))}
+          onClick={() => (userRole === "parent" ? onDeleteReward(reward.id) : onPurchaseReward(reward.id))}
         >
           {buttonTitle}
         </Button>
@@ -81,4 +81,4 @@ const GoalCard = ({ goal, userRole, balance, progress, progressColor, onDeleteGo
   );
 };
 
-export default GoalCard;
+export default RewardCard;

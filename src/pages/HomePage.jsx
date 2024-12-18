@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 
 import FamilyBlock from '../components/Family/FamilyBlock';
-import GoalsBlock from '../components/Goals/GoalsBlock';
+import RewardsBlock from '../components/Rewards/RewardsBlock';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -33,12 +33,12 @@ const Home = () => {
         <FamilyBlock />
       </GridItem>
       <GridItem overflow="auto">
-        <GoalsBlock />
+        <RewardsBlock />
       </GridItem>
     </Grid>
   ) : (
     <Box w="100%" h="100%">
-      <GoalsBlock />
+      <RewardsBlock />
     </Box>
   );
 };

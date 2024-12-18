@@ -72,6 +72,21 @@ export const parseAddMemberError = (error) => {
   return parseApiError(error, addMemberErrorMap);
 };
 
+export const parseDeleteMemberError = (error) => {
+  const deleteMemberErrorMap = {
+    400: {
+      commonMessage: errorMessages.otherFamilyMember,
+    },
+    403: {
+      commonMessage: errorMessages.onlyParentCanDelete,
+    },
+    404: {
+      commonMessage: errorMessages.memberNotFound,
+    },
+  };
+  return parseApiError(error, deleteMemberErrorMap);
+};
+
 export const parseTopupError = (error) => {
   const topupErrorMap = {
     400: {

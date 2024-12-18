@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, Button, SimpleGrid, Flex, Spacer, Heading } from "@chakra-ui/react";
 
-import GoalCard from "./GoalCard";
-import AddGoalForm from "./AddGoalForm";
-import { addGoal, removeGoal, purchaseGoal } from "../../redux/goalsSlice";
+import RewardCard from "./RewardCard";
+import AddRewardForm from "./AddRewardForm";
+import { addReward, removeReward, purchaseReward } from "../../redux/rewardsSlice";
 import { updateBalance } from "../../redux/userSlice";
 import { addTransaction } from "../../redux/transactionsSlice";
 
@@ -16,64 +16,64 @@ const calculateGoalProgress = (balance, price) => ({
     balance / price < 0.7 ? "green" : "teal",
 });
 
-const GoalsBlock = () => {
+const RewardsBlock = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
-  const allGoals = useSelector((state) => state.goals.items);
+  const allRewards = useSelector((state) => state.rewards.items);
 
   const isParent = currentUser.role === 'parent';
-  const goals = isParent
-    ? allGoals
-    : allGoals.filter(goal => !goal.purchasedBy || goal.purchasedBy === currentUser.id);
+  const rewards = isParent
+    ? allRewards
+    : allRewards.filter(reward => !reward.purchasedBy || reward.purchasedBy === currentUser.id);
 
-  const [isAddGoalOpen, setAddGoalOpen] = useState(false);
+  const [isAddRewardOpen, setAddRewardOpen] = useState(false);
 
   // event handlers
-  const onAddGoalClick = () => setAddGoalOpen(true);
+  const onAddRewardClick = () => setAddRewardOpen(true);
 
-  const onAddGoalSubmit = ({ title, price, image }) => {
-    console.log(`Добавить цель: ${title} ${price} ${image}`)
-    dispatch(addGoal({ title, price, image }));
+  const onAddRewardSubmit = ({ title, price, image }) => {
+    console.log(`Add reward: ${title} ${price} ${image}`)
+    dispatch(addReward({ title, price, image }));
   };
 
-  const onDeleteGoal = (goalId) => {
-    console.log(`Delete goal with id ${goalId}`)
-    dispatch(removeGoal(goalId));
+  const onDeleteReward = (rewardId) => {
+    console.log(`Delete reward with id ${rewardId}`)
+    dispatch(removeReward(rewardId));
   };
 
-  const onPurchaseGoal = (goalId) => {
-    const goal = allGoals.find(goal => goal.id === goalId);
-    if (!goal || currentUser.balance < goal.price) return;
+  const onPurchaseReward = (rewardId) => {
+    const reward = allRewards.find(r => r.id === rewardId);
+    if (!reward || currentUser.balance < reward.price) return;
 
     // Списание звёздочек
-    dispatch(updateBalance({ amount: -goal.price }));
+    dispatch(updateBalance({ amount: -reward.price }));
 
     // Обновление статуса цели
-    dispatch(purchaseGoal({ goalId, userId: currentUser.id }));
+    dispatch(purchaseReward({ rewardId, userId: currentUser.id }));
 
     // Запись транзакции
     dispatch(addTransaction({
-      amount: -goal.price,
-      reason: `Покупка цели: ${goal.title}`,
+      amount: -reward.price,
+      reason: `Покупка цели: ${reward.title}`,
     }));
   };
 
   // render
-  const renderGoalCards = () => (
+  const renderRewardCards = () => (
     <SimpleGrid columns={{ base: 1, md: 3, lg: 4, xl: 6 }} gap="20px">
-      {goals.map((goal) => {
-        const { progress, progressColor } = calculateGoalProgress(currentUser.balance, goal.price);
+      {rewards.map((reward) => {
+        const { progress, progressColor } = calculateGoalProgress(currentUser.balance, reward.price);
 
         return (
-          <GoalCard
-            key={goal.id}
-            goal={goal}
+          <RewardCard
+            key={reward.id}
+            reward={reward}
             userRole={currentUser.role}
             balance={currentUser.balance}
             progress={progress}
             progressColor={progressColor}
-            onDeleteGoal={onDeleteGoal}
-            onPurchaseGoal={onPurchaseGoal}
+            onDeleteReward={onDeleteReward}
+            onPurchaseReward={onPurchaseReward}
           />
         );
       })}
@@ -85,11 +85,11 @@ const GoalsBlock = () => {
       <Flex>
         <Heading size="xl" mb={4}>Цели</Heading>
         <Spacer />
-        <Button colorScheme='teal' mb="4" onClick={onAddGoalClick}>
+        <Button colorScheme='teal' mb="4" onClick={onAddRewardClick}>
           Добавить цель
         </Button>
       </Flex>
-      {renderGoalCards()}
+      {renderRewardCards()}
     </>
   );
 
@@ -98,7 +98,7 @@ const GoalsBlock = () => {
       <Flex>
         <Heading size="xl" mb={4}>Баланс: {currentUser.balance} ⭐️</Heading>
       </Flex>
-      {renderGoalCards()}
+      {renderRewardCards()}
     </>
   );
 
@@ -113,13 +113,13 @@ const GoalsBlock = () => {
       overflow="auto"
     >
       {isParent ? renderParentView() : renderChildView()}
-      <AddGoalForm
-        isOpen={isAddGoalOpen}
-        onClose={() => setAddGoalOpen(false)}
-        onSubmit={onAddGoalSubmit}
+      <AddRewardForm
+        isOpen={isAddRewardOpen}
+        onClose={() => setAddRewardOpen(false)}
+        onSubmit={onAddRewardSubmit}
       />
     </Box>
   );
 };
 
-export default GoalsBlock;
+export default RewardsBlock;

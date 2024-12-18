@@ -23,8 +23,7 @@ const userSlice = createSlice({
       const { amount, reason } = action.payload;
       if (state.currentUser) {
         state.currentUser.balance += amount;
-
-        console.log("transaction: ", amount, reason)
+        console.debug("transaction: ", amount, reason)
       }
     }
   }

@@ -11,7 +11,7 @@ import { addFamilyMember, deleteFamilyMember } from '../../api/familyService';
 import { topUpBalance } from '../../api/transactionService';
 import { addMember, removeMember, topUpChildBalance, selectChildren, selectParents, fetchFamilyMembers } from '../../redux/familySlice';
 import { addTransaction } from '../../redux/transactionsSlice';
-import { parseAddMemberError, parseTopupError } from '../../utils/parser';
+import { parseAddMemberError, parseTopupError, parseDeleteMemberError } from '../../utils/parser';
 
 const FamilyBlock = () => {
   const dispatch = useDispatch();
@@ -54,7 +54,9 @@ const FamilyBlock = () => {
       dispatch(removeMember(memberToRemove.id));
       closeModal();
     } catch (error) {
-      setServerError(error.message);
+      const parsedErrors = parseDeleteMemberError(error);
+      const errorMessage = parsedErrors.join('. ');
+      setServerError(errorMessage);
     }
   };
 

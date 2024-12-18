@@ -16,7 +16,7 @@ import {
   Text
 } from '@chakra-ui/react';
 
-const AddGoalForm = ({ isOpen, onClose, onSubmit }) => {
+const AddRewardForm = ({ isOpen, onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState('https://via.placeholder.com/150');
@@ -89,4 +89,4 @@ const AddGoalForm = ({ isOpen, onClose, onSubmit }) => {
   );
 };
 
-export default AddGoalForm;
+export default AddRewardForm;
