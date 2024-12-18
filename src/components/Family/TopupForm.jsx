@@ -30,10 +30,6 @@ const TopupForm = ({ isOpen, onClose, onSubmit }) => {
 
   const handleSubmit = () => {
     const formErrors = validateTopupForm(formData);
-    console.debug('Form data:', formData);
-    console.debug('Form errors:', formErrors);
-
-        
     if (formErrors.length > 0) {
       setErrors(formErrors);
       return;

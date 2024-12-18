@@ -45,3 +45,13 @@ export const validateTopupForm = ({ amount, reason }) => {
 
   return errors;
 }
+
+// Local validation for add reward form
+export const validateAddRewardForm = ({ name, price, image }) => {
+  const errors = [];
+
+  if (!name.trim()) errors.push(errorMessages.requiredName);
+  if (!price || price <= 0) errors.push(errorMessages.requiredPrice);
+
+  return errors;
+};
