@@ -33,7 +33,7 @@ const RewardCard = ({ reward, userRole, balance, progress, progressColor, onDele
       {/* Image with Badge */}
       <Box position="relative" mb="4">
         <Image 
-          src={reward.image} 
+          src={reward.image ? reward.image : "https://via.placeholder.com/150"} 
           alt={reward.title} 
           objectFit="cover" 
           width="100%" 

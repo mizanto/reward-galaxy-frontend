@@ -17,21 +17,21 @@ import {
 } from '@chakra-ui/react';
 
 const AddRewardForm = ({ isOpen, onClose, onSubmit }) => {
-  const [title, setTitle] = useState('');
+  const [name, setName] = useState('');
   const [price, setPrice] = useState('');
-  const [image, setImage] = useState('https://via.placeholder.com/150');
+  const [image, setImage] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = () => {
-    if (!title.trim() || price <= 0 || !image.trim()) {
+    if (!name.trim() || price <= 0) {
       setError('Пожалуйста, заполните все поля корректно');
       return;
     }
     setError('');
-    onSubmit({ title, price, image });
-    setTitle('');
+    onSubmit({ name, price, image });
+    setName('');
     setPrice('');
-    setImage('https://via.placeholder.com/150');
+    setImage('');
     onClose();
   };
 
@@ -39,15 +39,15 @@ const AddRewardForm = ({ isOpen, onClose, onSubmit }) => {
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
-        {error && <Text color="red.500" mb={4}>{error}</Text>}
         <ModalHeader>Добавить цель</ModalHeader>
+        {error && <Text color="red.500" mb={4}>{error}</Text>}
         <ModalCloseButton />
         <ModalBody>
           <FormControl mb={4}>
             <FormLabel>Название цели</FormLabel>
             <Input 
-              value={title} 
-              onChange={(e) => setTitle(e.target.value)} 
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
               placeholder="Введите название" 
             />
           </FormControl>
@@ -79,7 +79,7 @@ const AddRewardForm = ({ isOpen, onClose, onSubmit }) => {
             colorScheme="teal" 
             onClick={handleSubmit} 
             ml={3}
-            isDisabled={!title.trim() || price <= 0 || !image.trim()}
+            isDisabled={!name.trim() || price <= 0}
           >
             Добавить
           </Button>

@@ -11,7 +11,6 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Text
 } from '@chakra-ui/react';
 
 import { validateTopupForm } from '../../utils/validation';

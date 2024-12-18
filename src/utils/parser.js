@@ -132,3 +132,13 @@ export const parseNewMemberData = (newMemberData) => {
     familyName: newMemberData.family_name,
   };
 };
+
+export const parseRewardData = (rewardData) => {
+  return {
+    id: rewardData.id,
+    name: rewardData.name,
+    price: rewardData.price,
+    image: rewardData.image_url,
+    purchasedBy: rewardData.owner_id,
+  };
+};

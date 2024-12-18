@@ -7,6 +7,8 @@ import AddRewardForm from "./AddRewardForm";
 import { addReward, removeReward, purchaseReward, fetchRewards } from "../../redux/rewardsSlice";
 import { updateBalance } from "../../redux/userSlice";
 import { addTransaction } from "../../redux/transactionsSlice";
+import { createReward } from "../../api/rewardService";
+import { parseRewardData } from "../../utils/parser";
 
 const calculateGoalProgress = (balance, price) => ({
   progress: Math.min((balance / price) * 100, 100), // limit progress to 100%
@@ -25,6 +27,8 @@ const RewardsBlock = () => {
   const rewards = isParent
     ? allRewards
     : allRewards.filter(reward => !reward.purchasedBy || reward.purchasedBy === currentUser.id);
+  
+  console.log('Rewards:', rewards);
 
   const [isAddRewardOpen, setAddRewardOpen] = useState(false);
 
@@ -35,9 +39,14 @@ const RewardsBlock = () => {
   // event handlers
   const onAddRewardClick = () => setAddRewardOpen(true);
 
-  const onAddRewardSubmit = ({ title, price, image }) => {
-    console.log(`Add reward: ${title} ${price} ${image}`)
-    dispatch(addReward({ title, price, image }));
+  const onAddRewardSubmit = async ({ name, price, image }) => {
+    try {
+      const rewardData = await createReward({ name, price, image });
+      const newReward = parseRewardData(rewardData);
+      dispatch(addReward(newReward));
+    } catch (error) {
+      console.error('Error adding reward:', error);
+    }
   };
 
   const onDeleteReward = (rewardId) => {
