@@ -108,6 +108,27 @@ export const parseTopupError = (error) => {
   return parseApiError(error, topupErrorMap);
 };
 
+export const parsePurchaseError = (error) => {
+  const purchaseErrorMap = {
+    400: {
+      commonMessage: errorMessages.insufficientBalance,
+    },
+    403: {
+      commonMessage: errorMessages.onlyChildCanPurchase,
+    },
+    404: {
+      commonMessage: errorMessages.rewardNotFound,
+    },
+    422: {
+      fieldMessages: {
+        amount: errorMessages.requiredAmount,
+        reason: errorMessages.requiredReason,
+      },
+    },
+  };
+  return parseApiError(error, purchaseErrorMap);
+};
+
 export const parseAddRewardError = (error) => {
   const rewardErrorMap = {
     403: {

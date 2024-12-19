@@ -9,7 +9,8 @@ import { addReward, removeReward, purchaseReward, fetchRewards } from "../../red
 import { updateBalance } from "../../redux/userSlice";
 import { addTransaction } from "../../redux/transactionsSlice";
 import { createReward, deleteReward } from "../../api/rewardService";
-import { parseRewardData, parseAddRewardError, parseDeleteRewardError } from "../../utils/parser";
+import { purchase } from "../../api/transactionService";
+import { parseRewardData, parseAddRewardError, parseDeleteRewardError, parsePurchaseError } from "../../utils/parser";
 
 const calculateGoalProgress = (balance, price) => ({
   progress: Math.min((balance / price) * 100, 100), // limit progress to 100%
@@ -65,21 +66,26 @@ const RewardsBlock = () => {
     }
   };
 
-  const onPurchaseReward = (rewardId) => {
+  const onPurchaseReward = async (rewardId) => {
     const reward = allRewards.find(r => r.id === rewardId);
     if (!reward || currentUser.balance < reward.price) return;
 
-    // Списание звёздочек
-    dispatch(updateBalance({ amount: -reward.price }));
+    try {
+      const response = await purchase(reward);
+      console.debug('Purchase response:', response);
 
-    // Обновление статуса цели
-    dispatch(purchaseReward({ rewardId, userId: currentUser.id }));
-
-    // Запись транзакции
-    dispatch(addTransaction({
-      amount: -reward.price,
-      reason: `Покупка цели: ${reward.title}`,
-    }));
+      // Update user balance and dispatch actions
+      dispatch(updateBalance({ amount: -reward.price }));
+      dispatch(purchaseReward({ rewardId, userId: currentUser.id }));
+      dispatch(addTransaction({
+        amount: -reward.price,
+        reason: `Покупка цели: ${reward.title}`,
+      }));
+    } catch (error) {
+      const parsedErrors = parsePurchaseError(error);
+      const errorMessage = parsedErrors.join('. ');
+      setServerError(errorMessage);
+    }
   };
 
   // render
