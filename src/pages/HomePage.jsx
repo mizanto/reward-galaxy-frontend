@@ -1,20 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 
 import FamilyBlock from '../components/Family/FamilyBlock';
 import RewardsBlock from '../components/Rewards/RewardsBlock';
 
 const Home = () => {
-  const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user.currentUser);
-
-  useEffect(() => {
-    if (!currentUser) {
-      navigate('/login');
-    }
-  }, [currentUser, navigate]);
 
   if (!currentUser) {
     return null;
