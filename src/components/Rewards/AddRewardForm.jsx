@@ -27,15 +27,13 @@ const AddRewardForm = ({ isOpen, onClose, onSubmit }) => {
   });
   const [errors, setErrors] = useState('');
 
-  const handleChange = (e) => {
-    if (typeof e === 'string' || typeof e === 'number') {
-      console.debug('handleChange', 'price', e);
-      setFormData((prev) => ({ ...prev, price: e }));
-    } else {
-      const { name, value } = e.target;
-      console.debug('handleChange', name, value);
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+  const handleTextInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleNumberInputChange = (value) => {
+    setFormData((prev) => ({ ...prev, price: value }));
   };
 
   const handleSubmit = () => {
@@ -45,13 +43,11 @@ const AddRewardForm = ({ isOpen, onClose, onSubmit }) => {
       return;
     }
     onSubmit(formData);
-    onSubmit(formData);
-    setFormData({ name: '', price: '', image: '' });
     handleClose();
   };
 
   const handleClose = () => {
-    setFormData({ name: '', email: '', role: 'child', password: '' });
+    setFormData({ name: '', price: '', image: '' });
     onClose();
   };
 
@@ -70,7 +66,7 @@ const AddRewardForm = ({ isOpen, onClose, onSubmit }) => {
             <Input 
               name="name"
               value={formData.name} 
-              onChange={handleChange}
+              onChange={handleTextInputChange}
               placeholder="Введите название" 
             />
           </FormControl>
@@ -79,7 +75,7 @@ const AddRewardForm = ({ isOpen, onClose, onSubmit }) => {
             <RequiredFormLabel text="Цена ⭐️" />
             <NumberInput 
               value={formData.price} 
-              onChange={(value) => handleChange(value)}
+              onChange={handleNumberInputChange}
               min={0}
             >
               <NumberInputField name="price" placeholder="Введите цену" />
@@ -91,7 +87,7 @@ const AddRewardForm = ({ isOpen, onClose, onSubmit }) => {
             <Input 
               name="image"
               value={formData.image} 
-              onChange={handleChange} 
+              onChange={handleTextInputChange} 
               placeholder="https://..." 
             />
           </FormControl>

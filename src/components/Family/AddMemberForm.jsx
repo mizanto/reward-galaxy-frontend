@@ -40,7 +40,7 @@ const AddMemberForm = ({ isOpen, onClose, onSubmit }) => {
     }
 
     onSubmit(formData);
-    onClose();
+    handleClose();
   };
 
   const handleClose = () => {

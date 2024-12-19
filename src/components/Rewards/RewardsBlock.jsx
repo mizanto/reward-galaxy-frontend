@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Button, SimpleGrid, Flex, Spacer, Heading } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid, Flex, Spacer, Heading, Spinner, Text } from "@chakra-ui/react";
 
 import RewardCard from "./RewardCard";
 import AddRewardForm from "./AddRewardForm";
+import MessageBox from '../Common/MessageBox';
 import { addReward, removeReward, purchaseReward, fetchRewards } from "../../redux/rewardsSlice";
 import { updateBalance } from "../../redux/userSlice";
 import { addTransaction } from "../../redux/transactionsSlice";
 import { createReward } from "../../api/rewardService";
-import { parseRewardData } from "../../utils/parser";
+import { parseRewardData, parseAddRewardError } from "../../utils/parser";
 
 const calculateGoalProgress = (balance, price) => ({
   progress: Math.min((balance / price) * 100, 100), // limit progress to 100%
@@ -22,15 +23,16 @@ const RewardsBlock = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user.currentUser);
   const allRewards = useSelector((state) => state.rewards.items);
+  const { status, error } = useSelector((state) => state.family);
 
   const isParent = currentUser.role === 'parent';
-  const rewards = isParent
-    ? allRewards
-    : allRewards.filter(reward => !reward.purchasedBy || reward.purchasedBy === currentUser.id);
   
-  console.log('Rewards:', rewards);
+  const filterRewardsForChildren = (reward) =>
+    !reward.purchasedBy || reward.purchasedBy === currentUser.id;
+  const rewards = isParent ? allRewards : allRewards.filter(filterRewardsForChildren);
 
   const [isAddRewardOpen, setAddRewardOpen] = useState(false);
+  const [serverError, setServerError] = useState(null); 
 
   useEffect(() => {
       dispatch(fetchRewards());
@@ -45,7 +47,9 @@ const RewardsBlock = () => {
       const newReward = parseRewardData(rewardData);
       dispatch(addReward(newReward));
     } catch (error) {
-      console.error('Error adding reward:', error);
+      const parsedErrors = parseAddRewardError(error);
+      const errorMessage = parsedErrors.join('. ');
+      setServerError(errorMessage);
     }
   };
 
@@ -96,10 +100,14 @@ const RewardsBlock = () => {
   const renderParentView = () => (
     <>
       <Flex>
-        <Heading size="xl" mb={4}>Цели</Heading>
+        <Heading size="xl" mb="4" mr="4">Награды</Heading>
+
+        {/* MessageBox для ошибок */}
+        {serverError && <MessageBox message={serverError} type='error' onClose={() => setServerError(null)} />}
         <Spacer />
-        <Button colorScheme='teal' mb="4" onClick={onAddRewardClick}>
-          Добавить цель
+
+        <Button flexShrink="0" colorScheme='teal' mb="4" ml="4" onClick={onAddRewardClick}>
+          Добавить награду
         </Button>
       </Flex>
       {renderRewardCards()}
@@ -114,6 +122,14 @@ const RewardsBlock = () => {
       {renderRewardCards()}
     </>
   );
+
+  if (status === 'loading') {
+    return <Spinner size="xl" color="teal" />;
+  }
+
+  if (status === 'failed') {
+    return <Text color="red.500">Ошибка: {error}</Text>;
+  }
 
   return (
     <Box

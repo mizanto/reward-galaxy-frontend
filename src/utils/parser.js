@@ -108,6 +108,21 @@ export const parseTopupError = (error) => {
   return parseApiError(error, topupErrorMap);
 };
 
+export const parseAddRewardError = (error) => {
+  const rewardErrorMap = {
+    403: {
+      commonMessage: errorMessages.onlyParentCanAddReward,
+    },
+    422: {
+      fieldMessages: {
+        name: errorMessages.requiredName,
+        price: errorMessages.requiredPrice,
+      },
+    },
+  };
+  return parseApiError(error, rewardErrorMap);
+};
+
 export const parseUserData = (userData) => {
   return {
     id: userData.id,

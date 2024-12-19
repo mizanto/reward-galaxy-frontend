@@ -53,7 +53,7 @@ const RewardCard = ({ reward, userRole, balance, progress, progressColor, onDele
       </Box>
 
       <Text fontWeight="bold" fontSize="lg" mb="2">
-        {reward.title}
+        {reward.name}
       </Text>
 
       <Spacer />
