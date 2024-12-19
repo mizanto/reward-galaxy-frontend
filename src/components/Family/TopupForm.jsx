@@ -9,10 +9,10 @@ import {
   ModalCloseButton,
   Button,
   FormControl,
-  FormLabel,
   Input,
 } from '@chakra-ui/react';
 
+import RequiredFormLabel from '../Common/RequiredFormLabel'
 import { validateTopupForm } from '../../utils/validation';
 import ErrorMessage from '../Common/ErrorMessage';
 
@@ -60,7 +60,7 @@ const TopupForm = ({ isOpen, onClose, onSubmit }) => {
         {/* Topup Form */}
         <ModalBody>
           <FormControl mb={4}>
-            <FormLabel>Сумма</FormLabel>
+            <RequiredFormLabel text="Сумма" />
             <Input
               type="number"
               name="amount"
@@ -70,7 +70,7 @@ const TopupForm = ({ isOpen, onClose, onSubmit }) => {
             />
           </FormControl>
           <FormControl mb={4}>
-            <FormLabel>Причина</FormLabel>
+            <RequiredFormLabel text="Причина" />
             <Input
               value={formData.reason}
               name="reason"
@@ -86,6 +86,7 @@ const TopupForm = ({ isOpen, onClose, onSubmit }) => {
           <Button 
             colorScheme="teal" 
             onClick={handleSubmit} 
+            isDisabled={!formData.amount.trim() || !formData.reason.trim()}
             ml={3}
           >
             Добавить
