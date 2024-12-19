@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Box, Heading, FormControl, Input, Button, Text } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, Navigate } from 'react-router-dom';
 
 import { loginUser } from '../api/authService';
 import { getCurrentUser } from '../api/userService';
@@ -14,11 +15,19 @@ import ErrorMessage from '../components/Common/ErrorMessage';
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState([]);
+
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+  console.debug('isAuthenticated:', isAuthenticated);
+
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
