@@ -8,8 +8,8 @@ import MessageBox from '../Common/MessageBox';
 import { addReward, removeReward, purchaseReward, fetchRewards } from "../../redux/rewardsSlice";
 import { updateBalance } from "../../redux/userSlice";
 import { addTransaction } from "../../redux/transactionsSlice";
-import { createReward } from "../../api/rewardService";
-import { parseRewardData, parseAddRewardError } from "../../utils/parser";
+import { createReward, deleteReward } from "../../api/rewardService";
+import { parseRewardData, parseAddRewardError, parseDeleteRewardError } from "../../utils/parser";
 
 const calculateGoalProgress = (balance, price) => ({
   progress: Math.min((balance / price) * 100, 100), // limit progress to 100%
@@ -53,9 +53,16 @@ const RewardsBlock = () => {
     }
   };
 
-  const onDeleteReward = (rewardId) => {
-    console.log(`Delete reward with id ${rewardId}`)
-    dispatch(removeReward(rewardId));
+  const onDeleteReward = async (rewardId) => {
+    try {
+      await deleteReward(rewardId);
+      console.log(`Delete reward with id ${rewardId}`)
+      dispatch(removeReward(rewardId));
+    } catch (error) {
+      const parsedErrors = parseDeleteRewardError(error);
+      const errorMessage = parsedErrors.join('. ');
+      setServerError(errorMessage);
+    }
   };
 
   const onPurchaseReward = (rewardId) => {

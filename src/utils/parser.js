@@ -123,6 +123,18 @@ export const parseAddRewardError = (error) => {
   return parseApiError(error, rewardErrorMap);
 };
 
+export const parseDeleteRewardError = (error) => {
+  const deleteRewardErrorMap = {
+    403: {
+      commonMessage: errorMessages.onlyParentCanDeleteReward,
+    },
+    404: {
+      commonMessage: errorMessages.rewardNotFound,
+    },
+  };
+  return parseApiError(error, deleteRewardErrorMap);
+};
+
 export const parseUserData = (userData) => {
   return {
     id: userData.id,

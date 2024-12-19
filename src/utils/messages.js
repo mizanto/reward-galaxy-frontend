@@ -16,5 +16,7 @@ export const errorMessages = {
   negativeBalance: "Невозможно совершить транзакцию. Баланс получателя не может быть отрицательным.",
   wrongReceiver: "Получателем можетт быть только ребенок.",
   receiverNotFound: "Получатель не найден.",
+  onlyParentCanDeleteReward: "Только родитель может удалить награду.",
+  rewardNotFound: "Награда не найдена.",
   unknownError: "Произошла неизвестная ошибка. Попробуйте снова.",
 };
