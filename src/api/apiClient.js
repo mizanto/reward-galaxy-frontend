@@ -1,12 +1,13 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000';
+import { API_BASE_URL, API_VERSION } from '../config';
 
 const apiClient = axios.create({
-  baseURL: API_URL,
+  baseURL: `${API_BASE_URL}/api/v${API_VERSION}`,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000,
 });
 
 // Add a request interceptor

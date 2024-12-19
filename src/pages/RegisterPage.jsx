@@ -21,7 +21,8 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState([]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setErrors([]);
 
     const formErrors = validateRegisterForm({
@@ -67,6 +68,7 @@ const Register = () => {
 
       {errors && <ErrorMessage errors={errors} />}
 
+      <form onSubmit={handleSubmit}>
       <FormControl mb={4}>
         <RequiredFormLabel text="Имя" />
         <Input 
@@ -94,6 +96,7 @@ const Register = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Введите email"
+          autoComplete="username"
         />
       </FormControl>
       
@@ -104,6 +107,7 @@ const Register = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Введите пароль"
+          autoComplete="new-password"
         />
       </FormControl>
 
@@ -114,6 +118,7 @@ const Register = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Повторите пароль"
+          autoComplete="new-password"
         />
       </FormControl>
 
@@ -121,6 +126,7 @@ const Register = () => {
       <Text mt={4} fontSize="sm" color="gray.500">
         Уже есть аккаунт? <a href="/login" style={{color:'teal'}}>Войти</a>
       </Text>
+      </form>
     </Box>
   );
 };

@@ -20,7 +20,8 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState([]);
 
-  const handleSubmit = async() => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setIsLoading(true);
     setErrors([]);
 
@@ -60,34 +61,41 @@ const LoginPage = () => {
 
       {errors && <ErrorMessage errors={errors} />}
       
-      <FormControl mb={4}>
-        <RequiredFormLabel text="Email" />
-        <Input 
-          type="email" 
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Введите email"
-        />
-      </FormControl>
-      
-      <FormControl mb={4}>
-        <RequiredFormLabel text="Пароль" />
-        <Input 
-          type="password" 
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Введите пароль"
-        />
-      </FormControl>
+      <form onSubmit={handleSubmit}>
+        <FormControl mb={4}>
+          <RequiredFormLabel text="Email" />
+          <Input 
+            type="email" 
+            value={email}
+            name="email"
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Введите email"
+            autoComplete="username"
+          />
+        </FormControl>
+        
+        <FormControl mb={4}>
+          <RequiredFormLabel text="Пароль" />
+          <Input 
+            type="password" 
+            value={password}
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Введите пароль"
+            autoComplete="current-password"
+          />
+        </FormControl>
 
-      <Button 
-        colorScheme="teal" 
-        width="100%" 
-        onClick={handleSubmit}
-        isLoading={isLoading}
-      >
-        Войти
-      </Button>
+        <Button 
+          colorScheme="teal" 
+          width="100%" 
+          type="submit"
+          isLoading={isLoading}
+        >
+          Войти
+        </Button>
+      </form>
+
       <Text mt={4} fontSize="sm" color="gray.500">
         Нет аккаунта? <Link to="/register" style={{ color: 'teal' }}>Зарегистрироваться</Link>
       </Text>
