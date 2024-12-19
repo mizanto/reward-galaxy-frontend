@@ -23,8 +23,6 @@ const LoginPage = () => {
 
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
-  console.debug('isAuthenticated:', isAuthenticated);
-
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
